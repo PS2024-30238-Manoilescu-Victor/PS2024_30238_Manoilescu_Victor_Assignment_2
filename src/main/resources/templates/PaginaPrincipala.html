@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet" id="bootstrap-css">
+<head>
+    <meta charset="UTF-8">
+    <title>Main page</title>
+    <link rel="stylesheet" th:href="@{/css/mainPage.css}">
+</head>
+<body>
+<div class="center">
+    <div style="margin-top: 280px">
+<button class="button1" onclick="location.href='./LoginClient';">
+    Client
+</button>
+        <button class="button2" onclick="location.href='./LoginAdmin';">
+            Admin
+        </button>
+    </div>
+</div>
+
+<script>
+
+    function FctLogClient()
+    {
+        window.local.href="LoginClient";
+    }
+
+</script>
+
+</body>
+</html>

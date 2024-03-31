@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet" id="bootstrap-css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/LoginAdmin.css}">
+</head>
+<body>
+<div class="center">
+    <div>
+        <form action="" style="font-family: 'Bodoni MT'">
+            <label for="email" class="label1">Email:</label>
+            <input type="text" id="email" name="email" required class="nume"><br>
+
+            <label for="password" class="label2">Password:</label>
+            <input type="password" id="password" name="password" required class="nume"><br>
+
+            <input type="button" value="Login" class="nume" style="margin-left: 165px", onclick="FctLogClient()">
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+    function FctLogClient()
+    {
+        let email = document.getElementById("email");
+        let password = document.getElementById("password");
+        if(email.value !== "" && password.value !== "")
+            location.href="person/LoggedinAdmin/" + email.value + "/" + password.value;
+        //window.local.href="RegisterClient";
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+.center {
+    display: flex;
+    flex: fit-content;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.button1{
+    /*margin-top: 280px; */
+    margin-right: 280px;
+    background-color: #404040;
+    color: #bb7a2a;
+    border-color: #404040;
+    width: 140px;
+    height: 50px;
+}
+
+.button2{
+    /*margin-top: 280px; */
+    /*margin-right: 280px; */
+    background-color: #404040;
+    color: #bb7a2a;
+    border-color: #404040;
+    width: 140px;
+    height: 50px;
+}
+
+body{
+    margin: 0px;
+    background-image: url("../assets/MainPage.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}

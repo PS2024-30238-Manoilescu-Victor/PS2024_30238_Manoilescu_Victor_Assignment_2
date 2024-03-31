@@ -1,0 +1,143 @@
+.top{
+    display: flex;
+    flex: fit-content;
+    flex-direction: row;
+    min-height: 100%;
+    height: 100%;
+    /*position: absolute;*/
+    width: 100%;
+}
+
+.buttons_top{
+    margin-top: 5px;
+    margin-left: 20px;
+    background-color: turquoise;
+    color: darkblue;
+    border-color: turquoise;
+    width: 140px;
+    height: 50px;
+    border-radius: 32px;
+    font-family: "Bookman Old Style";
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close2 {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close3 {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close4 {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.close2:hover,
+.close2:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.close3:hover,
+.close3:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.close4:hover,
+.close4:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tableFormat {
+    border: 2px solid mediumpurple;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.center{
+    /*display: flex;*/
+    flex: fit-content;
+    flex-direction: row;
+    justify-content: center;
+    /*align-items: center;*/
+    min-height: 100%;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    margin-left: 500px;
+    margin-top: 40px;
+
+
+}
+
+.back_button{
+    margin-top: 550px;
+    background-color: darkcyan;
+    color: black;
+    border-color: darkcyan;
+    width: 140px;
+    height: 50px;
+    border-radius: 20px;
+    font-family: "Times New Roman";
+}
+
+body{
+    margin: 0px;
+    background-image: url("../assets/Client_background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}

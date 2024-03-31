@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet" id="bootstrap-css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/ClientPage.css}">
+</head>
+<body>
+<div class="top">
+<h1 th:text="'Hello, ' + ${client.getNume()}"></h1>
+
+    <!-- Trigger/Open The Modal -->
+    <button id="myBtn" class="buttons_top">Modify account</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form th:action="@{/person/ClientUpdate/{path}(path=${client.id})}" method="post" style="font-family: 'Book Antiqua'">
+                <label for="nume" style="margin-left: 7px">Surname:</label>
+                <input type="text" id="nume" name="nume" pattern="[a-zA-Z]{1,}" required><br>
+
+                <label for="prenume" style="margin-left: 26px">Name:</label>
+                <input type="text" id="prenume" name="prenume" pattern="[a-zA-Z]{1,}" required><br>
+
+                <label for="email" style="margin-left: 28px">Email:</label>
+                <input type="email" id="email" name="email" required><br>
+
+                <label for="parola" style="margin-left: 2px">Password:</label>
+                <input type="password" id="parola" name="parola" pattern="[a-zA-Z0-9,. ]{5,20}" required><br>
+
+                <label for="nrTelefon" >PhoneNr:</label>
+                <input type="number" id="nrTelefon" name="nrTelefon" required style="margin-left: 7px" pattern="[0-9]{10}"><br>
+
+                <input type="submit" value="Change" >
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Trigger/Open The Modal -->
+    <button id="myBtn2" class="buttons_top">Add order</button>
+
+    <!-- The Modal -->
+    <div id="myModal2" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close2">&times;</span>
+            <form th:action="@{/person/createOrder/{path}(path=${client.id})}" method="post" style="font-family: 'Book Antiqua'">
+                <label for="idTicket" style="margin-left: 8px">Ticket id:</label>
+                <input type="number" id="idTicket" name="idTicket" required><br>
+
+                <label for="nr" >Number of tickets:</label>
+                <input type="number" id="nr" name="nr" required><br>
+
+                <input type="submit" value="Add order" >
+            </form>
+        </div>
+
+    </div>
+
+
+    <!-- Trigger/Open The Modal -->
+    <button id="myBtn3" class="buttons_top">Add to order</button>
+
+    <!-- The Modal -->
+    <div id="myModal3" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close3">&times;</span>
+            <form th:action="@{/orders/addTicket}" method="post" style="font-family: 'Book Antiqua'">
+                <label for="idOrder" style="margin-left: 8px">Ticket id:</label>
+                <input type="number" id="idOrder" name="idOrder" required><br>
+
+                <label for="idTicket2" >Number of tickets:</label>
+                <input type="number" id="idTicket2" name="idTicket2" required><br>
+
+                <label for="nr2" >Number of tickets:</label>
+                <input type="number" id="nr2" name="nr2" required><br>
+
+                <input type="submit" value="Add" >
+            </form>
+        </div>
+
+    </div>
+
+
+    <!-- Trigger/Open The Modal -->
+    <button id="myBtn4" class="buttons_top">Remove from order</button>
+
+    <!-- The Modal -->
+    <div id="myModal4" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close4">&times;</span>
+            <form th:action="@{/orders/removeTicket}" method="post" style="font-family: 'Book Antiqua'">
+                <label for="idOrder" style="margin-left: 8px">Ticket id:</label>
+                <input type="number" id="idOrder2" name="idOrder" required><br>
+
+                <label for="idTicket2" >Number of tickets:</label>
+                <input type="number" id="idTicket3" name="idTicket2" required><br>
+
+                <label for="nr2" >Number of tickets:</label>
+                <input type="number" id="nr3" name="nr2" required><br>
+
+                <input type="submit" value="Remove" >
+
+            </form>
+        </div>
+
+    </div>
+
+    <form th:action="@{/person/DeleteClient/{path}(path=${client.id})}" method="post">
+        <input type="submit" class="buttons_top" value="Delete account" onclick="return confirm('Are you sure you want to delete this account?');"><br>
+    </form>
+
+    <form th:action="@{/ticket/clientSelectAll}" method="get">
+        <input type="submit" class="buttons_top" value="See movies" onclick="return confirm('This will redirect you to the ticket list. Proceed?');"><br>
+    </form>
+
+</div>
+
+<div class="center">
+    <table id="myTable" class="tableFormat">
+        <tr>
+
+            <th class="tableFormat">Id</th>
+            <th class="tableFormat">Date</th>
+           <th class="tableFormat">Tickets</th>
+            <th class="tableFormat">Delete</th>
+        </tr>
+        <tr th:each="order : ${client.orders}">
+
+            <td class="tableFormat" th:text="${order.id}"></td>
+            <td class="tableFormat" th:text="${order.dataComanda}"></td>
+
+            <td class="tableFormat">
+                <table>
+                    <tr th:switch="${order.tickets.size()}">
+                        <span th:case="'0'">No tickets</span>
+                        <span th:case="'1'" th:text="${order.tickets.get(0).getNume()}"></span>
+                        <div th:case="*">
+                            <div th:each="tickets:${order.tickets}" th:text="${tickets.nume}"/>
+                        </div>
+                    </tr>
+                </table>
+            </td>
+
+            <td class="tableFormat">
+                <form th:action="@{/orders/deleteOrder/{path}(path=${order.id})}" method="post">
+                    <input type="submit" class="buttons_top" value="Delete order" onclick="return confirm('Are you sure you want to delete this order?');"><br>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<button onclick="history.back()" class="back_button">Go Back</button>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Get the modal
+    var modal2 = document.getElementById("myModal2");
+
+    // Get the button that opens the modal
+    var btn2 = document.getElementById("myBtn2");
+
+    // Get the <span> element that closes the modal
+    var span2 = document.getElementsByClassName("close2")[0];
+
+    // When the user clicks on the button, open the modal
+    btn2.onclick = function() {
+        modal2.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span2.onclick = function() {
+        modal2.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal2) {
+            modal2.style.display = "none";
+        }
+    }
+
+
+    // Get the modal
+    var modal3 = document.getElementById("myModal3");
+
+    // Get the button that opens the modal
+    var btn3 = document.getElementById("myBtn3");
+
+    // Get the <span> element that closes the modal
+    var span3 = document.getElementsByClassName("close3")[0];
+
+    // When the user clicks on the button, open the modal
+    btn3.onclick = function() {
+        modal3.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span3.onclick = function() {
+        modal3.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal3) {
+            modal3.style.display = "none";
+        }
+    }
+
+    // Get the modal
+    var modal4 = document.getElementById("myModal4");
+
+    // Get the button that opens the modal
+    var btn4 = document.getElementById("myBtn4");
+
+    // Get the <span> element that closes the modal
+    var span4 = document.getElementsByClassName("close4")[0];
+
+    // When the user clicks on the button, open the modal
+    btn4.onclick = function() {
+        modal4.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span4.onclick = function() {
+        modal4.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal4) {
+            modal4.style.display = "none";
+        }
+    }
+
+</script>
+
+</body>
+</html>
