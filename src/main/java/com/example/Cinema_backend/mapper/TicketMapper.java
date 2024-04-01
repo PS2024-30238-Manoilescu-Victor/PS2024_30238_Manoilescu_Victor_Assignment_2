@@ -1,6 +1,7 @@
 package com.example.Cinema_backend.mapper;
 
 import com.example.Cinema_backend.dto.TicketDTO;
+import com.example.Cinema_backend.dto.TicketDTO2;
 import com.example.Cinema_backend.entity.Ticket;
 
 public class TicketMapper {
@@ -30,6 +31,19 @@ public class TicketMapper {
         aux.setOra(ticket.getOra());
         aux.setNrTickets(ticket.getNrTickets());
         aux.setOrders(ticket.getOrders());
+        return aux;
+    }
+
+    public static TicketDTO toTicketDTO(TicketDTO2 ticketDTO2)
+    {
+        TicketDTO aux = new TicketDTO();
+        aux.setId(ticketDTO2.getId());
+        aux.setNume(ticketDTO2.getNume1());
+        aux.setRating(ticketDTO2.getRating1());
+        aux.setPret(ticketDTO2.getPret1());
+        aux.setData(ticketDTO2.getData1());
+        aux.setOra(ticketDTO2.getOra1());
+        aux.setNrTickets(ticketDTO2.getNrTickets1());
         return aux;
     }
 

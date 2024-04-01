@@ -3,10 +3,13 @@ package com.example.Cinema_backend.controller;
 import java.util.List;
 
 import com.example.Cinema_backend.dto.TicketDTO;
+import com.example.Cinema_backend.dto.TicketDTO2;
+import com.example.Cinema_backend.mapper.TicketMapper;
 import com.example.Cinema_backend.service.TicketService;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +49,17 @@ public class TicketController {
         List<TicketDTO> dtos = ticketService.findTickets();
         int nr = dtos.size();
         log.info(nr + " Ticket(s) were found.");
-        ModelAndView modelAndView = new ModelAndView("ClientSelectAll");
+        ModelAndView modelAndView = new ModelAndView("SelectAllTickets");
+        modelAndView.addObject("tickets",dtos);
+        return modelAndView;
+    }
+
+    @GetMapping("/SelectAllTickets")
+    public ModelAndView adminGetTickets() {
+        List<TicketDTO> dtos = ticketService.findTickets();
+        int nr = dtos.size();
+        log.info(nr + " Ticket(s) were found.");
+        ModelAndView modelAndView = new ModelAndView("SelectAllTicketsAdmin");
         modelAndView.addObject("tickets",dtos);
         return modelAndView;
     }
@@ -74,37 +87,38 @@ public class TicketController {
      * @param ticketDTO tichet ce va fi inserat
      * @return id-ul tichetului inserat
      */
-    @PostMapping()
-    public ResponseEntity<Long> insertTicket(@Validated @RequestBody TicketDTO ticketDTO) {
+    @PostMapping(path = "/createTicket", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = { MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ModelAndView insertTicket(@Validated TicketDTO ticketDTO) {
         try {
             Long ticketID = ticketService.insert(ticketDTO);
             log.info("Ticket with id \"" + ticketID + "\" was inserted!");
-            return new ResponseEntity<>(ticketID, HttpStatus.CREATED);
+            return new ModelAndView("redirect:/TicketOper");
         }
         catch (Exception e) {
             log.info("Ticket was not inserted! " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ModelAndView("redirect:/TicketOper");
         }
     }
 
 
     /**
      * Actualizeaza un tichet cu un id dat cu noi valori
-     * @param ticketDTO noile valori puse in tichet
+     * @param ticketDTO2 noile valori puse in tichet
      * @param id id-ul tichetul ce va fi actualizat
      * @return id-ul tichetului actualizat
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Long> updateTicket(@Validated @RequestBody TicketDTO ticketDTO, @PathVariable Long id)
+    @PostMapping(path = "/updateTicket", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = { MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ModelAndView updateTicket(@Validated Long id, @Validated TicketDTO2 ticketDTO2)
     {
         try {
+            TicketDTO ticketDTO = TicketMapper.toTicketDTO(ticketDTO2);
             Long ticketID = ticketService.update(id, ticketDTO);
             log.info("Ticket with id \"" + ticketID + "\" was updated!");
-            return new ResponseEntity<>(ticketID, HttpStatus.CREATED);
+            return new ModelAndView("redirect:/TicketOper");
         }
         catch (Exception e) {
             log.info("Ticket with id \"" + id + "\" was not updated! " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ModelAndView("redirect:/TicketOper");
         }
     }
 
@@ -113,17 +127,17 @@ public class TicketController {
      * @param id id-ul tichetului ce va fi sters
      * @return id-ul tichetului sters
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deleteTicket(@PathVariable Long id)
+    @PostMapping("/deleteTicket/{id}")
+    public ModelAndView deleteTicket(@PathVariable Long id)
     {
         try {
             Long ticketID = ticketService.delete(id);
             log.info("Ticket with id \"" + ticketID + "\" was deleted!");
-            return new ResponseEntity<>(ticketID, HttpStatus.CREATED);
+            return new ModelAndView("redirect:/TicketOper");
         }
         catch (Exception e) {
             log.info("Ticket with id \"" + id + "\" was not deleted! " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ModelAndView("redirect:/TicketOper");
         }
     }
 

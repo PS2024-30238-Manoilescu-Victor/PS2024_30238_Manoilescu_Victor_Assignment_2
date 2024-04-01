@@ -49,3 +49,14 @@ body{
     width: 100%;
     margin-top: 95px;
 }
+
+.back_button{
+    /*margin-top: 450px;*/
+    background-color: darkcyan;
+    color: black;
+    border-color: darkcyan;
+    width: 140px;
+    height: 50px;
+    border-radius: 20px;
+    font-family: "Times New Roman";
+}

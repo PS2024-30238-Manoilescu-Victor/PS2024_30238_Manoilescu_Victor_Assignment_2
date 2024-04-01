@@ -48,3 +48,14 @@ body{
     background-size: cover;
     background-attachment: fixed;
 }
+
+.back_button{
+    /*margin-top: 550px;*/
+    background-color: darkcyan;
+    color: black;
+    border-color: darkcyan;
+    width: 140px;
+    height: 50px;
+    /*border-radius: 20px;*/
+    font-family: "Times New Roman";
+}

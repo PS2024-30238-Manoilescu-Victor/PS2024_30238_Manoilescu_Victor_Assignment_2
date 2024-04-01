@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet" id="bootstrap-css">
+<head>
+  <meta charset="UTF-8">
+  <title>Movies</title>
+  <link rel="stylesheet" th:href="@{/css/SelectAllTickets.css}">
+</head>
+<body>
+<div class="center">
+  <table id="myTable" class="tableFormat">
+    <tr>
+
+      <th class="tableFormat">Id</th>
+      <th class="tableFormat">Name</th>
+      <th class="tableFormat">Rating</th>
+      <th class="tableFormat">Price</th>
+      <th class="tableFormat">Date</th>
+      <th class="tableFormat">Hour</th>
+      <th class="tableFormat">Nr. Of Tickets</th>
+      <th class="tableFormat">Delete</th>
+    </tr>
+    <tr th:each="ticket : ${tickets}">
+      <td class="tableFormat" th:text="${ticket.id}"></td>
+      <td class="tableFormat" th:text="${ticket.nume}"></td>
+      <td class="tableFormat" th:text="${ticket.rating}"></td>
+      <td class="tableFormat" th:text="${ticket.pret}"></td>
+      <td class="tableFormat" th:text="${ticket.data}"></td>
+      <td class="tableFormat" th:text="${ticket.ora}"></td>
+      <td class="tableFormat" th:text="${ticket.nrTickets}"></td>
+      <td class="tableFormat">
+        <form th:action="@{/ticket/deleteTicket/{path}(path=${ticket.id})}" method="post">
+          <input type="submit" class="buttons_top" value="Delete order" onclick="return confirm('Are you sure you want to delete this ticket?');"><br>
+        </form>
+      </td>
+    </tr>
+  </table>
+  <button onclick="history.back()" style="margin-top: 20px">Go Back</button>
+</div>
+</body>
+</html>

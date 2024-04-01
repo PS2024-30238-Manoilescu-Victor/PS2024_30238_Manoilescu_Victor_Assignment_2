@@ -1,10 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet" id="bootstrap-css">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>AdminPage</title>
+    <link rel="stylesheet" th:href="@{/css/TicketOper.css}">
 </head>
 <body>
+<div class="center">
+
+
+    <div style="margin-top: 200px">
+
+
+        <div>
+            <form th:action="@{/person/SelectAllUsers}" method="get">
+                <input type="submit" value="See/delete users" class="form1"><br>
+            </form>
+        </div>
+
+        <!-- Trigger/Open The Modal -->
+        <button id="myBtn2" class="button1">Create User</button>
+
+        <!-- The Modal -->
+        <div id="myModal2" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close2">&times;</span>
+                <form th:action="@{/person/createUser}" method="post" style="font-family: 'Book Antiqua'">
+
+                    <label for="nume" style="margin-left: 7px">Surname:</label>
+                    <input type="text" id="nume" name="nume" pattern="[a-zA-Z]{1,}" required><br>
+
+                    <label for="prenume" style="margin-left: 26px">Name:</label>
+                    <input type="text" id="prenume" name="prenume" pattern="[a-zA-Z]{1,}" required><br>
+
+                    <label for="email" style="margin-left: 28px">Email:</label>
+                    <input type="text" id="email" name="email" pattern="[a-zA-Z0-9]+@[a-zA-Z]+(.ro|.com|.org)" required><br>
+
+                    <label for="parola" style="margin-left: 2px">Password:</label>
+                    <input type="password" id="parola" name="parola" pattern="[a-zA-Z0-9,. ]{5,20}" required><br>
+
+                    <label for="nrTelefon" >PhoneNr:</label>
+                    <input type="text" id="nrTelefon" name="nrTelefon" required style="margin-left: 7px" pattern="[0-9]{10}"><br>
+
+                    <label for="isAdmin" style="margin-left: 21px">Admin:</label>
+                    <input type="text" id="isAdmin" name="isAdmin" pattern="true|false"><br>
+
+                    <input type="submit" value="Add user">
+                </form>
+            </div>
+
+        </div>
+
+
+        <!-- Trigger/Open The Modal -->
+        <button id="myBtn3" class="button1">Update User</button>
+
+        <!-- The Modal -->
+        <div id="myModal3" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close3">&times;</span>
+                <form th:action="@{/person/updateUser}" method="post" style="font-family: 'Book Antiqua'">
+
+                    <label for="id" style="margin-left: 8px">Id:</label>
+                    <input type="number" id="id" name="id" required><br>
+
+                    <label for="nume1" style="margin-left: 7px">Surname:</label>
+                    <input type="text" id="nume1" name="nume1" pattern="[a-zA-Z]{1,}" required><br>
+
+                    <label for="prenume1" style="margin-left: 26px">Name:</label>
+                    <input type="text" id="prenume1" name="prenume1" pattern="[a-zA-Z]{1,}" required><br>
+
+                    <label for="email1" style="margin-left: 28px">Email:</label>
+                    <input type="text" id="email1" name="email1" pattern="[a-zA-Z0-9]+@[a-zA-Z]+(.ro|.com|.org)" required><br>
+
+                    <label for="parola1" style="margin-left: 2px">Password:</label>
+                    <input type="password" id="parola1" name="parola1" pattern="[a-zA-Z0-9,. ]{5,20}" required><br>
+
+                    <label for="nrTelefon1" >PhoneNr:</label>
+                    <input type="text" id="nrTelefon1" name="nrTelefon1" required style="margin-left: 7px" pattern="[0-9]{10}"><br>
+
+                    <label for="isAdmin1" style="margin-left: 21px">Admin:</label>
+                    <input type="text" id="isAdmin1" name="isAdmin1" pattern="true|false"><br>
+
+                    <input type="submit" value="Update user" >
+                </form>
+            </div>
+
+        </div>
+
+        <!--
+        <button class="button3" onclick="window.location.href='OrderOper';">
+            Orders
+        </button>
+        <button class="button2" onclick="window.location.href='TicketOper';">
+            Tickets
+        </button>
+        -->
+
+    </div>
+
+    <button onclick="location.href='Admin'" class="back_button">Go Back</button>
+</div>
+
+<script>
+
+    // Get the modal
+    var modal2 = document.getElementById("myModal2");
+
+    // Get the button that opens the modal
+    var btn2 = document.getElementById("myBtn2");
+
+    // Get the <span> element that closes the modal
+    var span2 = document.getElementsByClassName("close2")[0];
+
+    // When the user clicks on the button, open the modal
+    btn2.onclick = function() {
+        modal2.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span2.onclick = function() {
+        modal2.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal2) {
+            modal2.style.display = "none";
+        }
+    }
+
+
+    // Get the modal
+    var modal3 = document.getElementById("myModal3");
+
+    // Get the button that opens the modal
+    var btn3 = document.getElementById("myBtn3");
+
+    // Get the <span> element that closes the modal
+    var span3 = document.getElementsByClassName("close3")[0];
+
+    // When the user clicks on the button, open the modal
+    btn3.onclick = function() {
+        modal3.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span3.onclick = function() {
+        modal3.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal3) {
+            modal3.style.display = "none";
+        }
+    }
+
+</script>
 
 </body>
 </html>

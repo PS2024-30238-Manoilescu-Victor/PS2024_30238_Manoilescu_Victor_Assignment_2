@@ -32,12 +32,14 @@ public class OrdersController {
      * Functie care selecteaza toate comenzile
      * @return O lista de comenzi
      */
-    @GetMapping("/selectAll")
-    public ResponseEntity<List<OrdersDTO>> getOrders() {
+    @GetMapping("/selectAllOrders")
+    public ModelAndView getOrders() {
         List<OrdersDTO> dtos = ordersService.findOrders();
         int nr = dtos.size();
         log.info(nr + " Order(s) were found.");
-        return new ResponseEntity<>(dtos, HttpStatus.OK);
+        ModelAndView modelAndView = new ModelAndView("SelectAllOrders");
+        modelAndView.addObject("orders",dtos);
+        return modelAndView;
     }
 
     /**
@@ -119,6 +121,21 @@ public class OrdersController {
         }
     }
 
+    @PostMapping("addTicketAdmin")
+    //public ResponseEntity<Long> addTicketToOrder(@PathVariable Long idOrder, @PathVariable Long idTicket, @PathVariable int nr)
+    public ModelAndView addTicketToOrder2(@Validated Long idOrder, @Validated Long idTicket2, @Validated int nr2)
+    {
+        try {
+            Long orderID = ordersService.addTicket(idOrder, idTicket2, nr2);
+            log.info("Ticket with id \"" + idTicket2 + "\" was added to order " + orderID + ".");
+            return new ModelAndView("redirect:/OrderOper");
+        }
+        catch (Exception e) {
+            log.info("Ticket with id \"" + idTicket2 + "\" was not added to order " + idOrder + ". " + e.getMessage());
+            return new ModelAndView("redirect:/OrderOper");
+        }
+    }
+
 
     //@PutMapping("removeTicket/{idOrder}/{idTicket}/{nr}")
     //@PostMapping("removeTicket/{idOrder2}")
@@ -137,14 +154,29 @@ public class OrdersController {
         }
     }
 
+    @PostMapping("removeTicketAdmin")
+    //public ResponseEntity<Long> removeTicketFromOrder(@PathVariable Long idOrder, @PathVariable Long idTicket, @PathVariable int nr)
+    public ModelAndView removeTicketFromOrder2(@Validated Long idOrder, @Validated Long idTicket2, @Validated int nr2)
+    {
+        try {
+            Long orderID = ordersService.removeTicket(idOrder, idTicket2, nr2);
+            log.info("Ticket with id \"" + idTicket2 + "\" was removed from the order " + orderID + ".");
+            return new ModelAndView("redirect:/OrderOper");
+        }
+        catch (Exception e) {
+            log.info("Ticket with id \"" + idTicket2 + "\" was not removed from order " + idOrder + ". " + e.getMessage());
+            return new ModelAndView("redirect:/OrderOper");
+        }
+    }
+
     /**
      * Sterge o comanda cu id dat
      * @param id id-ul comenzii ce va fi sterse
      * @return id-ul comenzii sterse
      */
     //@DeleteMapping("deleteTicket/{id}")
-    @PostMapping("deleteOrder/{id}")
-    public ModelAndView deleteOrder(@PathVariable Long id)
+    @PostMapping("clientDeleteOrder/{id}")
+    public ModelAndView clientDeleteOrder(@PathVariable Long id)
     {
         try {
             Long orderID = ordersService.delete(id);
@@ -156,5 +188,21 @@ public class OrdersController {
             return new ModelAndView("redirect:/LoginClient");
         }
     }
+
+    @PostMapping("deleteOrder/{id}")
+    public ModelAndView deleteOrder(@PathVariable Long id)
+    {
+        try {
+            Long orderID = ordersService.delete(id);
+            log.info("Order with id \"" + orderID + "\" was deleted!");
+            return new ModelAndView("redirect:/OrderOper");
+        }
+        catch (Exception e) {
+            log.info("Order with id \"" + id + "\" was not deleted! " + e.getMessage());
+            return new ModelAndView("redirect:/OrderOper");
+        }
+    }
+
+
 
 }

@@ -1,6 +1,8 @@
 package com.example.Cinema_backend.controller;
 
 import com.example.Cinema_backend.dto.PersonDTO;
+import com.example.Cinema_backend.dto.PersonDTO2;
+import com.example.Cinema_backend.mapper.PersonMapper;
 import com.example.Cinema_backend.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,15 +37,17 @@ public class PersonController {
      * Functie care selecteaza toate persoanele
      * @return O lista de comenzi
      */
-    @GetMapping("/selectAll")
-    public ResponseEntity<List<PersonDTO>> getPersons() {
+    @GetMapping("/SelectAllUsers")
+    public ModelAndView getPersons() {
         List<PersonDTO> dtos = personService.findPersons();
+        ModelAndView modelAndView = new ModelAndView("SelectAllUsers");
+        modelAndView.addObject("users",dtos);
         int nr = dtos.size();
         if(nr == 1)
             log.info(nr + " Person was found.");
         else
             log.info(nr + " People were found.");
-        return new ResponseEntity<>(dtos, HttpStatus.OK);
+        return modelAndView;
     }
 
     /**
@@ -116,16 +120,16 @@ public class PersonController {
      * @param personDTO persoana ce va fi inserata
      * @return id-ul noii persoane inserate
      */
-    @PostMapping()
-    public ResponseEntity<Long> insertPerson(@Validated @RequestBody PersonDTO personDTO) {
+    @PostMapping(path = "/createUser", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = { MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ModelAndView insertPerson(@Validated PersonDTO personDTO) {
         try {
             Long personID = personService.insert(personDTO);
             log.info("Person with id \"" + personID + "\" was inserted!");
-        return new ResponseEntity<>(personID, HttpStatus.CREATED);
+        return new ModelAndView("redirect:/UserOper");
         }
         catch (Exception e) {
             log.info("Person was not inserted! " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ModelAndView("redirect:/UserOper");
         }
     }
 
@@ -146,21 +150,22 @@ public class PersonController {
 
     /**
      * Actualizeaza o persoana cu un id dat cu noi valori
-     * @param personDTO noile valori puse pentru persoana
+     * @param personDTO2 noile valori puse pentru persoana
      * @param id id-ul persoanei ce va fi actualizata
      * @return id-ul persoanei actualizate
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Long> updatePerson(@Validated @RequestBody PersonDTO personDTO, @PathVariable Long id)
+    @PostMapping("/updateUser")
+    public ModelAndView updatePerson(@Validated Long id, @Validated PersonDTO2 personDTO2)
     {
         try {
+            PersonDTO personDTO = PersonMapper.toPersonDTO(personDTO2);
             Long personID = personService.update(id, personDTO);
             log.info("User with id \"" + personID + "\" was updated!");
-            return new ResponseEntity<>(personID, HttpStatus.CREATED);
+            return new ModelAndView("redirect:/UserOper");
         }
         catch (Exception e) {
             log.info("User with id \"" + id + "\" was not updated! " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ModelAndView("redirect:/UserOper");
         }
     }
 
@@ -202,6 +207,21 @@ public class PersonController {
     }
 
 
+    @PostMapping(path ="/createOrderAdmin" , consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = { MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ModelAndView createOrderAdmin(@Validated Long idPerson, @Validated Long idTicket, @Validated int nr)
+    {
+        try {
+            Long orderID = personService.createOrder(idPerson, idTicket, nr);
+            log.info("Admin with id \"" + idPerson + "\" created the order with id " + orderID);
+            return new ModelAndView("redirect:/OrderOper");
+        }
+        catch (Exception e) {
+            log.info("Admin with id \"" + idPerson + "\" didn't create an order " + e.getMessage());
+            return new ModelAndView("redirect:/OrderOper");
+        }
+    }
+
+
     /**
      * Sterge o persoana cu id dat
      * @param id id-ul persoanei ce va fi sterse
@@ -221,12 +241,20 @@ public class PersonController {
             return new ModelAndView("redirect:/LoginClient");
         }
     }
-    /*
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<PersonDetailsDTO> getPerson(@PathVariable("id") UUID personId) {
-        PersonDetailsDTO dto = personService.findPersonById(personId);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    } */
+
+    @PostMapping("/DeleteUser/{id}")
+    public ModelAndView deleteUser(@PathVariable Long id)
+    {
+        try {
+            Long personID = personService.delete(id);
+            log.info("User with id \"" + personID + "\" was deleted!");
+            return new ModelAndView("redirect:/UserOper");
+        }
+        catch (Exception e) {
+            log.info("User with id \"" + id + "\" was not deleted! " + e.getMessage());
+            return new ModelAndView("redirect:/UserOper");
+        }
+    }
 
 
 

@@ -1,6 +1,7 @@
 package com.example.Cinema_backend.mapper;
 
 import com.example.Cinema_backend.dto.PersonDTO;
+import com.example.Cinema_backend.dto.PersonDTO2;
 import com.example.Cinema_backend.entity.Person;
 
 public class PersonMapper {
@@ -16,6 +17,19 @@ public class PersonMapper {
         aux.setNrTelefon(personDTO.getNrTelefon());
         aux.setIsAdmin(personDTO.getIsAdmin());
         aux.setOrders(personDTO.getOrders());
+        return aux;
+    }
+
+    public static PersonDTO toPersonDTO(PersonDTO2 personDTO2)
+    {
+        PersonDTO aux = new PersonDTO();
+        aux.setId(personDTO2.getId());
+        aux.setEmail(personDTO2.getEmail1());
+        aux.setNume(personDTO2.getNume1());
+        aux.setPrenume(personDTO2.getPrenume1());
+        aux.setParola(personDTO2.getParola1());
+        aux.setNrTelefon(personDTO2.getNrTelefon1());
+        aux.setIsAdmin(personDTO2.getIsAdmin1());
         return aux;
     }
 
