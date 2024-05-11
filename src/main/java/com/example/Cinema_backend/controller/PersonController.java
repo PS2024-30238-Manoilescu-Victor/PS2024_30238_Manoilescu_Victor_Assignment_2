@@ -1,19 +1,25 @@
 package com.example.Cinema_backend.controller;
 
+import com.example.Cinema_backend.constants.ConstantsEmailSender;
+import com.example.Cinema_backend.dto.AccountCreationDTO;
 import com.example.Cinema_backend.dto.PersonDTO;
 import com.example.Cinema_backend.dto.PersonDTO2;
 import com.example.Cinema_backend.mapper.PersonMapper;
+import com.example.Cinema_backend.config.RabbitMQSender;
 import com.example.Cinema_backend.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
 //import
 
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+
 import org.slf4j.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
@@ -32,6 +38,9 @@ public class PersonController {
     public PersonController(PersonService personService) {
         this.personService = personService;
     }
+
+    @Autowired
+    RabbitMQSender rabbitMQSender;
 
     /**
      * Functie care selecteaza toate persoanele
@@ -123,8 +132,8 @@ public class PersonController {
     @PostMapping(path = "/createUser", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = { MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ModelAndView insertPerson(@Validated PersonDTO personDTO) {
         try {
-            Long personID = personService.insert(personDTO);
-            log.info("Person with id \"" + personID + "\" was inserted!");
+            PersonDTO personAux = personService.insert(personDTO);
+            log.info("Person with uuid \"" + personAux.getUuid() + "\" was inserted!");
         return new ModelAndView("redirect:/UserOper");
         }
         catch (Exception e) {
@@ -137,8 +146,30 @@ public class PersonController {
     public ModelAndView registerUser(@Validated PersonDTO personDTO) {
         try {
             personDTO.setIsAdmin(false);
-            Long personID = personService.insert(personDTO);
-            log.info("User with id \"" + personID + "\" has registered!");
+            PersonDTO personAux = personService.insert(personDTO);
+            log.info("User with uuid \"" + personAux.getUuid() + "\" has registered!");
+
+            AccountCreationDTO accountCreationDTO = new AccountCreationDTO(personAux.getUuid(),personAux.getNume(),personAux.getPrenume(),personAux.getEmail());
+
+            try{
+                HttpHeaders headers = new HttpHeaders();
+                headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+                headers.setBearerAuth(accountCreationDTO.getUuid().toString() + "_" + ConstantsEmailSender.TOKEN);
+
+                HttpEntity<AccountCreationDTO> entity = new HttpEntity<>(accountCreationDTO,headers);
+
+                RestTemplate restTemplate = new RestTemplate();
+                String message = restTemplate.exchange(ConstantsEmailSender.AccountConfirmUrl,HttpMethod.POST,entity,String.class).getBody();
+
+                log.info(message);
+
+            }
+            catch (RestClientException exception){
+                if(!exception.getMessage().contains("400"))
+                    rabbitMQSender.sendAccountCreation(accountCreationDTO);
+                log.error(exception.getMessage());
+            }
+
             return new ModelAndView("redirect:/LoginClient");
         }
         catch (Exception e) {
@@ -196,8 +227,8 @@ public class PersonController {
     public ModelAndView createOrder(@PathVariable Long idPerson, @Validated Long idTicket, @Validated int nr)
     {
         try {
-            Long orderID = personService.createOrder(idPerson, idTicket, nr);
-            log.info("User with id \"" + idPerson + "\" created the order with id " + orderID);
+            UUID orderID = personService.createOrder(idPerson, idTicket, nr);
+            log.info("User with id \"" + idPerson + "\" created the order with uuid " + orderID);
             return new ModelAndView("redirect:/LoginClient");
         }
         catch (Exception e) {
@@ -211,8 +242,8 @@ public class PersonController {
     public ModelAndView createOrderAdmin(@Validated Long idPerson, @Validated Long idTicket, @Validated int nr)
     {
         try {
-            Long orderID = personService.createOrder(idPerson, idTicket, nr);
-            log.info("Admin with id \"" + idPerson + "\" created the order with id " + orderID);
+            UUID orderID = personService.createOrder(idPerson, idTicket, nr);
+            log.info("Admin with id \"" + idPerson + "\" created the order with uuid " + orderID);
             return new ModelAndView("redirect:/OrderOper");
         }
         catch (Exception e) {

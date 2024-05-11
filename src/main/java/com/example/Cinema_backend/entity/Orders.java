@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter //
@@ -16,16 +16,21 @@ import java.util.Set;
 @Table(name = "orders")
 public class Orders {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column
-    private Long id;
+    private UUID uuid;
+
+    //@Generated(strategy = EventType.INSERT)
+    @Column(insertable = false/*, updatable = false*/, columnDefinition="serial")
+    private Long idOrd;
 
     @Column
     private String dataComanda;
 
     @ManyToOne
-    @JoinColumn(name = "person_id")
+    @JoinColumn(name = "person_uuid")
     @JsonIgnore
     private Person person;
 
@@ -33,8 +38,8 @@ public class Orders {
     //@JsonIgnore
     @JoinTable(
             name = "ordered_Tickets",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "ticket_id"))
+            joinColumns = @JoinColumn(name = "order_uuid"),
+            inverseJoinColumns = @JoinColumn(name = "ticket_uuid"))
     private List<Ticket> tickets;
 
 

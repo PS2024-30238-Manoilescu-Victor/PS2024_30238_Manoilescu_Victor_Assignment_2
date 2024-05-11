@@ -5,9 +5,13 @@ import com.example.Cinema_backend.entity.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface TicketRepository extends JpaRepository<Ticket,Long> {
+import java.util.Optional;
+import java.util.UUID;
 
+@Repository
+public interface TicketRepository extends JpaRepository<Ticket, UUID> {
+
+    Optional<Ticket> findTicketByIdTick(Long id);
     Ticket findTicketByNume(String nume);
 
 }

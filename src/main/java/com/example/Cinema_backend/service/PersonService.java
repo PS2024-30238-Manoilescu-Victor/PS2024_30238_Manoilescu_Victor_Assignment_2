@@ -4,7 +4,6 @@ import com.example.Cinema_backend.constants.ConstantsPerson;
 import com.example.Cinema_backend.constants.ConstantsTicket;
 import com.example.Cinema_backend.dto.OrdersDTO;
 import com.example.Cinema_backend.dto.PersonDTO;
-import com.example.Cinema_backend.entity.Orders;
 import com.example.Cinema_backend.entity.Person;
 import com.example.Cinema_backend.entity.Ticket;
 import com.example.Cinema_backend.mapper.PersonMapper;
@@ -17,8 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.text.SimpleDateFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Date;
 
@@ -71,7 +69,7 @@ public class PersonService {
      * @throws Exception
      */
     public PersonDTO findPersonById(Long id) throws Exception {
-        Optional<Person> personOptional = personRepository.findById(id);
+        Optional<Person> personOptional = personRepository.findPersonByIdPer(id);
         if (!personOptional.isPresent()) {
             //log.error("Person with id {} was not found in db", id);
             throw new Exception(Person.class.getSimpleName() + " with id: " + id);
@@ -84,17 +82,17 @@ public class PersonService {
      * @param personDTO persoana ce va fi inserata
      * @return id-ul noii persoane inserate
      */
-    public Long insert(PersonDTO personDTO) throws Exception{
+    public PersonDTO insert(PersonDTO personDTO) throws Exception{
         Person person = PersonMapper.toPerson(personDTO);
-        //person = personRepository.save(person);
+        //person = personRepository.saveAndFlush()(person);
 
         if(PersonValidations.validareEmail(person.getEmail())) {
             if (PersonValidations.validareParola(person.getParola()) == 0) {
                 if (PersonValidations.validareNume(person.getNume())) {
                     if(PersonValidations.validareNume(person.getPrenume())) {
                         if (PersonValidations.validareNrTelefon((person.getNrTelefon()))) {
-                            person = personRepository.save(person);
-                            return person.getId();
+                            person = personRepository.saveAndFlush(person);
+                            return PersonMapper.fromPerson(person);
                         }
                         else
                         {
@@ -134,7 +132,7 @@ public class PersonService {
      */
     public Long update(Long id, PersonDTO personDTO) throws Exception {
         //Person person = PersonMapper.toPerson(personDTO);
-        Optional<Person> personOptional = personRepository.findById(id);
+        Optional<Person> personOptional = personRepository.findPersonByIdPer(id);
         if (personOptional.isPresent()) {
             Person person = PersonMapper.toPerson(personDTO);//personOptional.get();
 
@@ -143,8 +141,8 @@ public class PersonService {
                     if (PersonValidations.validareNume(person.getNume())) {
                         if(PersonValidations.validareNume(person.getPrenume())) {
                             if (PersonValidations.validareNrTelefon((person.getNrTelefon()))) {
-                                person.setId(id);
-                                personRepository.save(person);
+                                person.setUuid(personOptional.get().getUuid());
+                                personRepository.saveAndFlush(person);
                                 return id;
                             }
                             else
@@ -189,9 +187,9 @@ public class PersonService {
      */
     public Long delete(Long id) throws Exception {
         //Person person = PersonMapper.toPerson(personDTO);
-        Optional<Person> personOptional = personRepository.findById(id);
+        Optional<Person> personOptional = personRepository.findPersonByIdPer(id);
         if (personOptional.isPresent()) {
-            personRepository.deleteById(id);
+            personRepository.deleteById(personOptional.get().getUuid());
             return id;
         }
         else {
@@ -206,24 +204,24 @@ public class PersonService {
      * @return id-ul persoanei ce a plasat noua comanda
      * @throws Exception
      */
-    public Long createOrder(Long idPerson,Long idTicket, int nr) throws Exception {
+    public UUID createOrder(Long idPerson,Long idTicket, int nr) throws Exception {
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String currentDateTime = dateFormat.format(currentDate);
-        Optional<Person> personOptional = personRepository.findById(idPerson);
+        Optional<Person> personOptional = personRepository.findPersonByIdPer(idPerson);
         if (personOptional.isPresent()) {
             Person person = personOptional.get();
-            Optional<Ticket> ticketOptional = ticketRepository.findById(idTicket);
+            Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(idTicket);
             if (ticketOptional.isPresent()) {
                 //Ticket ticket = ticketOptional.get();
                 OrdersDTO aux2 = new OrdersDTO();
                 aux2.setDataComanda(currentDateTime);
                 aux2.setPerson(person);
-                Long orderId = ordersService.insert2(aux2,idTicket);
+                UUID orderUUId = ordersService.insert2(aux2,idTicket);
                 ticketService.decrementNr(idTicket);
-                ordersService.addTicket(orderId,idTicket,nr-1);
+                ordersService.addTicket(orderUUId,idTicket,nr-1);
 
-                return orderId;
+                return orderUUId;
             }
             else {
                 throw new Exception(ConstantsTicket.nonexistentTicket(idTicket));
@@ -239,7 +237,7 @@ public class PersonService {
             Date currentDate = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String currentDateTime = dateFormat.format(currentDate);
-            Optional<Person> personOptional = personRepository.findById(personId);
+            Optional<Person> personOptional = personRepository.findPersonById(personId);
             if (personOptional.isPresent()) {
                 Person person = personOptional.get();
                 List<Orders> orders = person.getOrders();

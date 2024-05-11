@@ -2,6 +2,7 @@ package com.example.Cinema_backend.controller;
 
 import java.util.List;
 
+import com.example.Cinema_backend.dto.SalesDTO;
 import com.example.Cinema_backend.dto.TicketDTO;
 import com.example.Cinema_backend.dto.TicketDTO2;
 import com.example.Cinema_backend.mapper.TicketMapper;
@@ -44,9 +45,10 @@ public class TicketController {
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
+
     @GetMapping("/clientSelectAll")
     public ModelAndView clientGetTickets() {
-        List<TicketDTO> dtos = ticketService.findTickets();
+        List<TicketDTO> dtos = ticketService.findTicketsReduced();
         int nr = dtos.size();
         log.info(nr + " Ticket(s) were found.");
         ModelAndView modelAndView = new ModelAndView("SelectAllTickets");
@@ -61,6 +63,16 @@ public class TicketController {
         log.info(nr + " Ticket(s) were found.");
         ModelAndView modelAndView = new ModelAndView("SelectAllTicketsAdmin");
         modelAndView.addObject("tickets",dtos);
+        return modelAndView;
+    }
+
+    @GetMapping("/SelectAllSales")
+    public ModelAndView adminGetSales() {
+        List<SalesDTO> dtos = ticketService.findSales();
+        int nr = dtos.size();
+        log.info(nr + " Sale(s) were found.");
+        ModelAndView modelAndView = new ModelAndView("SelectAllSalesAdmin");
+        modelAndView.addObject("sales",dtos);
         return modelAndView;
     }
 
@@ -97,6 +109,19 @@ public class TicketController {
         catch (Exception e) {
             log.info("Ticket was not inserted! " + e.getMessage());
             return new ModelAndView("redirect:/TicketOper");
+        }
+    }
+
+    @PostMapping(path = "/createSale", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = { MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ModelAndView createSale(@Validated SalesDTO salesDTO) {
+        try {
+            Long ticketID = ticketService.insertSale(salesDTO);
+            log.info("Ticket with id \"" + ticketID + "\" received a new promotion!");
+            return new ModelAndView("redirect:/SaleOper");
+        }
+        catch (Exception e) {
+            log.info("Promotion not created! " + e.getMessage());
+            return new ModelAndView("redirect:/SaleOper");
         }
     }
 
@@ -138,6 +163,20 @@ public class TicketController {
         catch (Exception e) {
             log.info("Ticket with id \"" + id + "\" was not deleted! " + e.getMessage());
             return new ModelAndView("redirect:/TicketOper");
+        }
+    }
+
+    @PostMapping("/deleteSale/{id}")
+    public ModelAndView deleteSale(@PathVariable Long id)
+    {
+        try {
+            Long ticketID = ticketService.deleteSale(id);
+            log.info("Ticket with id \"" + ticketID + "\" had his promotion removed!");
+            return new ModelAndView("redirect:/SaleOper");
+        }
+        catch (Exception e) {
+            log.info("Ticket with id \"" + id + "\" did not have his promotion removed! " + e.getMessage());
+            return new ModelAndView("redirect:/SaleOper");
         }
     }
 

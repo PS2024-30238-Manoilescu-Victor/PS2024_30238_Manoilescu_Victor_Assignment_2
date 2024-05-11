@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter //
 @Setter //
@@ -15,8 +16,8 @@ import java.util.Set;
 @NoArgsConstructor //
 public class TicketDTO {
 
+    private UUID uuid;
     private Long id;
-
     private String nume;
     private Integer rating;
     private Float pret;

@@ -8,7 +8,8 @@ public class OrdersMapper {
     public static Orders toOrder(OrdersDTO ordersDTO)
     {
         Orders aux = new Orders();
-        aux.setId(ordersDTO.getId());
+        aux.setUuid(ordersDTO.getUuid());
+        aux.setIdOrd(ordersDTO.getId());
         aux.setDataComanda(ordersDTO.getDataComanda());
         aux.setPerson(ordersDTO.getPerson());
         aux.setTickets(ordersDTO.getTickets());
@@ -18,7 +19,8 @@ public class OrdersMapper {
     public static OrdersDTO fromOrder(Orders orders)
     {
         OrdersDTO aux = new OrdersDTO();
-        aux.setId(orders.getId());
+        aux.setUuid(orders.getUuid());
+        aux.setId(orders.getIdOrd());
         aux.setDataComanda(orders.getDataComanda());
         aux.setPerson(orders.getPerson());
         aux.setTickets(orders.getTickets());

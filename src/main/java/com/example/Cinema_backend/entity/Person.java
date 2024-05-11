@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter //
@@ -18,9 +18,13 @@ import java.util.List;
 public class Person {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column
-    private Long id;
+    private UUID uuid;
+
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(insertable = false/*, updatable = false*/, columnDefinition="serial")
+    private Long idPer;
     @Column
     private String nume;
     @Column

@@ -4,7 +4,7 @@
       rel="stylesheet" id="bootstrap-css">
 <head>
   <meta charset="UTF-8">
-  <title>Movies</title>
+  <title>Orders</title>
   <link rel="stylesheet" th:href="@{/css/SelectAllOrders.css}">
 </head>
 <body>
@@ -21,7 +21,7 @@
     <tr th:each="order : ${orders}">
 
       <td class="tableFormat" th:text="${order.id}"></td>
-      <td class="tableFormat" th:text="${order.person.id != null} ? ${order.person.id} : 'no user id'"></td>
+      <td class="tableFormat" th:text="${order.person.getIdPer != null} ? ${order.person.getIdPer} : 'no user id'"></td>
       <td class="tableFormat" th:text="${order.dataComanda}"></td>
 
       <td class="tableFormat">

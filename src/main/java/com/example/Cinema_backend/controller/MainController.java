@@ -67,4 +67,10 @@ public class MainController {
         return new ModelAndView("TicketOper");
     }
 
+    @GetMapping("/SaleOper")
+    public ModelAndView SaleOper()
+    {
+        return new ModelAndView("SaleOper");
+    }
+
 }

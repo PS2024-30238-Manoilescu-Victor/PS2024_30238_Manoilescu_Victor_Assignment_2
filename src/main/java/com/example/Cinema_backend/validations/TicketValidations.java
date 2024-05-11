@@ -17,6 +17,10 @@ public class TicketValidations {
     {
         return (rating >=1 && rating <= 10);
     }
+    public static boolean validareProcent(int percentage)
+    {
+        return (percentage >=0 && percentage <= 100);
+    }
     public static boolean validareData(String data)
     {
         Pattern pattern = Pattern.compile("([0-3]?[0-9]/[0-1][0-9]/[0-9]+)|([0-3]?[0-9]:[0-1][0-9]:[0-9]+)", Pattern.CASE_INSENSITIVE);

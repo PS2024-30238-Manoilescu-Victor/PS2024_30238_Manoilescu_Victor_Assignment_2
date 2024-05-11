@@ -5,9 +5,13 @@ import com.example.Cinema_backend.entity.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface OrdersRepositry extends JpaRepository<Orders,Long> {
+import java.util.Optional;
+import java.util.UUID;
 
+@Repository
+public interface OrdersRepositry extends JpaRepository<Orders, UUID> {
+
+    Optional<Orders> findOrdersByIdOrd(Long id);
     Orders findOrderByPerson(Person person);
 
 }

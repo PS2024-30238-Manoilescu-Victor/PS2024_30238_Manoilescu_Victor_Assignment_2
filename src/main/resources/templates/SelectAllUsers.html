@@ -4,7 +4,7 @@
       rel="stylesheet" id="bootstrap-css">
 <head>
     <meta charset="UTF-8">
-    <title>Movies</title>
+    <title>Users</title>
     <link rel="stylesheet" th:href="@{/css/SelectAllUsers.css}">
 </head>
 <body>
@@ -35,9 +35,9 @@
                 <table>
                     <tr th:switch="${user.orders.size()}">
                         <span th:case="'0'">No orders</span>
-                        <span th:case="'1'" th:text="${user.orders.get(0).getId()}"></span>
+                        <span th:case="'1'" th:text="${user.orders.get(0).getIdOrd()}"></span>
                         <div th:case="*">
-                            <div th:each="order:${user.orders}" th:text="${order.id}"/>
+                            <div th:each="order:${user.orders}" th:text="${order.getIdOrd}"/>
                         </div>
                     </tr>
                 </table>

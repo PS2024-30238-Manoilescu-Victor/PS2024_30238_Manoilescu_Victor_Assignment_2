@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter //
 @Setter //
@@ -15,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor //
 public class PersonDTO2 {
 
+    private UUID uuid;
     private Long id;
     private String nume1;
     private String prenume1;

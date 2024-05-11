@@ -156,15 +156,15 @@ public class OrdersController {
 
     @PostMapping("removeTicketAdmin")
     //public ResponseEntity<Long> removeTicketFromOrder(@PathVariable Long idOrder, @PathVariable Long idTicket, @PathVariable int nr)
-    public ModelAndView removeTicketFromOrder2(@Validated Long idOrder, @Validated Long idTicket2, @Validated int nr2)
+    public ModelAndView removeTicketFromOrder2(@Validated Long idOrder2, @Validated Long idTicket3, @Validated Integer nr3)
     {
         try {
-            Long orderID = ordersService.removeTicket(idOrder, idTicket2, nr2);
-            log.info("Ticket with id \"" + idTicket2 + "\" was removed from the order " + orderID + ".");
+            Long orderID = ordersService.removeTicket(idOrder2, idTicket3, nr3);
+            log.info("Ticket with id \"" + idTicket3 + "\" was removed from the order " + orderID + ".");
             return new ModelAndView("redirect:/OrderOper");
         }
         catch (Exception e) {
-            log.info("Ticket with id \"" + idTicket2 + "\" was not removed from order " + idOrder + ". " + e.getMessage());
+            log.info("Ticket with id \"" + idTicket3 + "\" was not removed from order " + idOrder2 + ". " + e.getMessage());
             return new ModelAndView("redirect:/OrderOper");
         }
     }

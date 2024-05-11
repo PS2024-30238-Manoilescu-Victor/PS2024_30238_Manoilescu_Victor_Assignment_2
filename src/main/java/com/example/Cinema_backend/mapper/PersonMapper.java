@@ -9,7 +9,8 @@ public class PersonMapper {
     public static Person toPerson(PersonDTO personDTO)
     {
         Person aux = new Person();
-        aux.setId(personDTO.getId());
+        aux.setUuid(personDTO.getUuid());
+        aux.setIdPer(personDTO.getId());
         aux.setEmail(personDTO.getEmail());
         aux.setNume(personDTO.getNume());
         aux.setPrenume(personDTO.getPrenume());
@@ -23,6 +24,7 @@ public class PersonMapper {
     public static PersonDTO toPersonDTO(PersonDTO2 personDTO2)
     {
         PersonDTO aux = new PersonDTO();
+        aux.setUuid(personDTO2.getUuid());
         aux.setId(personDTO2.getId());
         aux.setEmail(personDTO2.getEmail1());
         aux.setNume(personDTO2.getNume1());
@@ -36,7 +38,8 @@ public class PersonMapper {
     public static PersonDTO fromPerson(Person person)
     {
         PersonDTO aux = new PersonDTO();
-        aux.setId(person.getId());
+        aux.setUuid(person.getUuid());
+        aux.setId(person.getIdPer());
         aux.setEmail(person.getEmail());
         aux.setNume(person.getNume());
         aux.setPrenume(person.getPrenume());

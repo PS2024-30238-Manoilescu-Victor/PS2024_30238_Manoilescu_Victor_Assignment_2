@@ -1,14 +1,19 @@
 package com.example.Cinema_backend.service;
 
 import com.example.Cinema_backend.constants.ConstantsTicket;
+import com.example.Cinema_backend.dto.SalesDTO;
 import com.example.Cinema_backend.dto.TicketDTO;
+import com.example.Cinema_backend.entity.Sales;
 import com.example.Cinema_backend.entity.Ticket;
+import com.example.Cinema_backend.mapper.SalesMapper;
 import com.example.Cinema_backend.mapper.TicketMapper;
+import com.example.Cinema_backend.repository.SalesRepository;
 import com.example.Cinema_backend.repository.TicketRepository;
 import com.example.Cinema_backend.validations.TicketValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +25,9 @@ public class TicketService {
     TicketRepository ticketRepository;
 
     @Autowired
+    SalesRepository salesRepository;
+
+    @Autowired
     public TicketService(TicketRepository ticketRepository) {this.ticketRepository = ticketRepository;}
 
     public List<TicketDTO> findTickets() {
@@ -29,6 +37,40 @@ public class TicketService {
                 .collect(Collectors.toList());
     }
 
+    public List<SalesDTO> findSales() {
+        List<Sales> salesList = salesRepository.findAll();
+        return salesList.stream()
+                .map(SalesMapper::fromSales)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<TicketDTO> findTicketsReduced() {
+        List<Ticket> ticketList = ticketRepository.findAll();
+        List<Ticket> newTicketList = new ArrayList<>();
+
+
+        for (Ticket ticket : ticketList)
+        {
+            Optional<Sales> salesOptional = salesRepository.findById(ticket.getIdTick());
+            if (salesOptional.isPresent()) {
+                Ticket newTicket = ticket;
+                int percent = salesOptional.get().getPercentReduced();
+                newTicket.setPret(ticket.getPret() - (ticket.getPret() * percent / 100));
+                newTicketList.add(newTicket);
+            }
+            else
+            {
+                newTicketList.add(ticket);
+            }
+        }
+
+        return newTicketList.stream()
+                .map(TicketMapper::fromTicket)
+                .collect(Collectors.toList());
+    }
+
+
     /**
      * Functie care returneaza un bilet cu un id dat
      * @param id id-ul biletului returnat
@@ -36,7 +78,7 @@ public class TicketService {
      * @throws Exception
      */
     public TicketDTO findTicketById(Long id) throws Exception {
-        Optional<Ticket> ticketOptional = ticketRepository.findById(id);
+        Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(id);
         if (!ticketOptional.isPresent()) {
             //log.error("Ticket with id {} was not found in db", id);
             throw new Exception(Ticket.class.getSimpleName() + " with id: " + id + "was not found.");
@@ -57,8 +99,8 @@ public class TicketService {
                     if(TicketValidations.validareOra(ticket.getOra())) {
                         if(TicketValidations.validareRating(ticket.getRating())) {
 
-                            ticket = ticketRepository.save(ticket);
-                            return ticket.getId();
+                            ticket = ticketRepository.saveAndFlush(ticket);
+                            return ticket.getIdTick();
                         }
                         else
                         {
@@ -87,6 +129,25 @@ public class TicketService {
         }
     }
 
+    public Long insertSale(SalesDTO salesDTO) throws Exception{
+        Sales sales = SalesMapper.toSales(salesDTO);
+        Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(sales.getTicketId());
+        if (ticketOptional.isPresent()) {
+            if (TicketValidations.validareProcent(sales.getPercentReduced())) {
+                sales = salesRepository.save(sales);
+                return sales.getTicketId();
+            }
+            else
+            {
+                throw new Exception(ConstantsTicket.wrongPercentage());
+            }
+        }
+        else
+        {
+            throw new Exception(ConstantsTicket.nonexistentTicket(sales.getTicketId()));
+        }
+    }
+
     /**
      * Actualizeaza un bilet cu un id dat cu noi valori
      * @param ticketDTO noile valori puse in bilet
@@ -96,7 +157,7 @@ public class TicketService {
      */
     public Long update(Long id, TicketDTO ticketDTO) throws Exception {
         //Ticket ticket = TicketMapper.toTicket(ticketDTO);
-        Optional<Ticket> ticketOptional = ticketRepository.findById(id);
+        Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(id);
         if (ticketOptional.isPresent()) {
             Ticket ticket = TicketMapper.toTicket(ticketDTO);//ticketOptional.get();
 
@@ -105,8 +166,8 @@ public class TicketService {
                     if (TicketValidations.validareData(ticket.getData())) {
                         if(TicketValidations.validareOra(ticket.getOra())) {
                             if(TicketValidations.validareRating(ticket.getRating())) {
-                                ticket.setId(id);
-                                ticketRepository.save(ticket);
+                                ticket.setUuid(ticketOptional.get().getUuid());
+                                ticketRepository.saveAndFlush(ticket);
                                 return id;
                             }
                             else
@@ -148,9 +209,9 @@ public class TicketService {
      */
     public Long delete(Long id) throws Exception {
         //Ticket ticket = TicketMapper.toTicket(ticketDTO);
-        Optional<Ticket> ticketOptional = ticketRepository.findById(id);
+        Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(id);
         if (ticketOptional.isPresent()) {
-            ticketRepository.deleteById(id);
+            ticketRepository.deleteById(ticketOptional.get().getUuid());
             return id;
         }
         else {
@@ -158,14 +219,26 @@ public class TicketService {
         }
     }
 
+    public Long deleteSale(Long id) throws Exception {
+        //Ticket ticket = TicketMapper.toTicket(ticketDTO);
+        Optional<Sales> salesOptional = salesRepository.findById(id);
+        if (salesOptional.isPresent()) {
+            salesRepository.deleteById(id);
+            return id;
+        }
+        else {
+            throw new Exception(ConstantsTicket.nonexistentSale(id));
+        }
+    }
+
 
     public Long incrementNr(Long id) throws Exception
     {
-        Optional<Ticket> ticketOptional = ticketRepository.findById(id);
+        Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(id);
         if (ticketOptional.isPresent()) {
             Ticket ticket = ticketOptional.get();//ticketOptional.get();
             ticket.setNrTickets(ticket.getNrTickets() + 1);
-            ticketRepository.save(ticket);
+            ticketRepository.saveAndFlush(ticket);
             return id;
         }
         else {
@@ -175,14 +248,14 @@ public class TicketService {
 
     public Long decrementNr(Long id) throws Exception
     {
-        Optional<Ticket> ticketOptional = ticketRepository.findById(id);
+        Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(id);
         if (ticketOptional.isPresent()) {
             Ticket ticket = ticketOptional.get();//ticketOptional.get();
             if(ticket.getNrTickets() > 0)
                 ticket.setNrTickets(ticket.getNrTickets() - 1);
             else
                 throw new Exception(ConstantsTicket.noMoreTickets());
-            ticketRepository.save(ticket);
+            ticketRepository.saveAndFlush(ticket);
             return id;
         }
         else {

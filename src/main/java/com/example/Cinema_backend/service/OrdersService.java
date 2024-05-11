@@ -10,13 +10,10 @@ import com.example.Cinema_backend.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,7 +52,7 @@ public class OrdersService {
      */
     public OrdersDTO findOrderById(Long id) throws Exception
     {
-        Optional<Orders> orderOptional = ordersRepositry.findById(id);
+        Optional<Orders> orderOptional = ordersRepositry.findOrdersByIdOrd(id);
         if (!orderOptional.isPresent()) {
             //log.error("Order with id {} was not found in db", id);
             throw new Exception(Orders.class.getSimpleName() + " with id: " + id + "was not found.");
@@ -71,8 +68,8 @@ public class OrdersService {
     public Long insert(OrdersDTO ordersDTO)
     {
         Orders orders = OrdersMapper.toOrder(ordersDTO);
-        orders = ordersRepositry.save(orders);
-        return orders.getId();
+        orders = ordersRepositry.saveAndFlush(orders);
+        return orders.getIdOrd();
     }
 
     /**
@@ -82,10 +79,10 @@ public class OrdersService {
      * @return id-ul noii comenzi inserate
      * @throws Exception
      */
-    public Long insert2(OrdersDTO ordersDTO,Long idTicket) throws Exception
+    public UUID insert2(OrdersDTO ordersDTO, Long idTicket) throws Exception
     {
         Orders orders = OrdersMapper.toOrder(ordersDTO);
-        Optional<Ticket> ticketOptional = ticketRepository.findById(idTicket);
+        Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(idTicket);
         if (ticketOptional.isPresent()) {
                 Ticket ticket = ticketOptional.get();
                 List<Ticket> aux = orders.getTickets(); //List
@@ -94,8 +91,8 @@ public class OrdersService {
                 }
                 aux.add(ticket);
                 orders.setTickets(aux);
-                orders = ordersRepositry.save(orders);
-                return orders.getId();
+                orders = ordersRepositry.saveAndFlush(orders);
+                return orders.getUuid();
         }
         else
         {
@@ -112,11 +109,11 @@ public class OrdersService {
      */
     public Long update(Long id, OrdersDTO ordersDTO) throws Exception
     {
-        Optional<Orders> ordersOptional = ordersRepositry.findById(id);
+        Optional<Orders> ordersOptional = ordersRepositry.findOrdersByIdOrd(id);
         if (ordersOptional.isPresent()) {
             Orders orders = OrdersMapper.toOrder(ordersDTO);//personOptional.get();
-            orders.setId(id);
-            ordersRepositry.save(orders);
+            orders.setUuid(ordersOptional.get().getUuid());
+            ordersRepositry.saveAndFlush(orders);
             return id;
         }
         else {
@@ -131,15 +128,15 @@ public class OrdersService {
      * @throws Exception
      */
     public Long delete(Long id) throws Exception {
-        Optional<Orders> orderOptional = ordersRepositry.findById(id);
+        Optional<Orders> orderOptional = ordersRepositry.findOrdersByIdOrd(id);
         if (orderOptional.isPresent()) {
 
             Orders orders = orderOptional.get();
             for(Ticket t : orders.getTickets())
             {
-                ticketService.incrementNr(t.getId());
+                ticketService.incrementNr(t.getIdTick());
             }
-            ordersRepositry.deleteById(id);
+            ordersRepositry.deleteById(orderOptional.get().getUuid());
             return id;
         }
         else {
@@ -156,10 +153,10 @@ public class OrdersService {
      */
     public Long addTicket(Long idOrder, Long idTicket, int nr ) throws Exception
     {
-        Optional<Orders> ordersOptional = ordersRepositry.findById(idOrder);
+        Optional<Orders> ordersOptional = ordersRepositry.findOrdersByIdOrd(idOrder);
         if (ordersOptional.isPresent()) {
             Orders orders = ordersOptional.get();
-            Optional<Ticket> ticketOptional = ticketRepository.findById(idTicket);
+            Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(idTicket);
             if (ticketOptional.isPresent()) {
                 Ticket ticket = ticketOptional.get();
                 /*List<Ticket> aux = orders.getTickets();
@@ -169,7 +166,38 @@ public class OrdersService {
                     orders.getTickets().add(ticket);
                     ticketService.decrementNr(idTicket);
                 }
-                ordersRepositry.save(orders);
+                ordersRepositry.saveAndFlush(orders);
+                return idOrder;
+            }
+            else
+            {
+                throw new Exception("The ticket with id \"" + idTicket + "\" doesn't exist!");
+            }
+
+        }
+        else {
+            throw new Exception("The order with id \"" + idOrder + "\" doesn't exist!");
+
+        }
+        //return idOrder;
+    }
+
+    public UUID addTicket(UUID idOrder, Long idTicket, int nr ) throws Exception
+    {
+        Optional<Orders> ordersOptional = ordersRepositry.findById(idOrder);
+        if (ordersOptional.isPresent()) {
+            Orders orders = ordersOptional.get();
+            Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(idTicket);
+            if (ticketOptional.isPresent()) {
+                Ticket ticket = ticketOptional.get();
+                /*List<Ticket> aux = orders.getTickets();
+                aux.add(ticket);
+                orders.setTickets(aux);*/
+                for (int i = 0; i < nr; i++) {
+                    orders.getTickets().add(ticket);
+                    ticketService.decrementNr(idTicket);
+                }
+                ordersRepositry.saveAndFlush(orders);
                 return idOrder;
             }
             else
@@ -187,10 +215,10 @@ public class OrdersService {
 
     public Long removeTicket(Long idOrder, Long idTicket, int nr) throws Exception
     {
-        Optional<Orders> ordersOptional = ordersRepositry.findById(idOrder);
+        Optional<Orders> ordersOptional = ordersRepositry.findOrdersByIdOrd(idOrder);
         if (ordersOptional.isPresent()) {
             Orders orders = ordersOptional.get();
-            Optional<Ticket> ticketOptional = ticketRepository.findById(idTicket);
+            Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(idTicket);
             if (ticketOptional.isPresent()) {
                 Ticket ticket = ticketOptional.get();
                 List<Ticket> aux = orders.getTickets();
@@ -216,7 +244,7 @@ public class OrdersService {
                     ticketService.incrementNr(idTicket);
                 }
                 orders.setTickets(aux);
-                ordersRepositry.save(orders);
+                ordersRepositry.saveAndFlush(orders);
                 return idOrder;
             }
             else

@@ -9,7 +9,8 @@ public class TicketMapper {
     public static Ticket toTicket(TicketDTO ticketDTO)
     {
         Ticket aux = new Ticket();
-        aux.setId(ticketDTO.getId());
+        aux.setUuid(ticketDTO.getUuid());
+        aux.setIdTick(ticketDTO.getId());
         aux.setNume(ticketDTO.getNume());
         aux.setRating(ticketDTO.getRating());
         aux.setPret(ticketDTO.getPret());
@@ -23,7 +24,8 @@ public class TicketMapper {
     public static TicketDTO fromTicket(Ticket ticket)
     {
         TicketDTO aux = new TicketDTO();
-        aux.setId(ticket.getId());
+        aux.setUuid(ticket.getUuid());
+        aux.setId(ticket.getIdTick());
         aux.setNume(ticket.getNume());
         aux.setRating(ticket.getRating());
         aux.setPret(ticket.getPret());
@@ -37,6 +39,7 @@ public class TicketMapper {
     public static TicketDTO toTicketDTO(TicketDTO2 ticketDTO2)
     {
         TicketDTO aux = new TicketDTO();
+        aux.setUuid(ticketDTO2.getUuid());
         aux.setId(ticketDTO2.getId());
         aux.setNume(ticketDTO2.getNume1());
         aux.setRating(ticketDTO2.getRating1());
