@@ -45,4 +45,8 @@ public class Person {
     @JsonIgnore
     private List<Orders> orders;
 
+    @OneToMany(mappedBy="person", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<FinalOrders> finalOrders;
+
 }

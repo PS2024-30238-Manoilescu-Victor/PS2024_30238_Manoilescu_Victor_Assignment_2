@@ -3,6 +3,8 @@ package com.example.Cinema_backend.controller;
 import java.util.List;
 
 import com.example.Cinema_backend.dto.OrdersDTO;
+import com.example.Cinema_backend.fileGenerators.FileGenerator;
+import com.example.Cinema_backend.fileGenerators.TextFileGenerator;
 import com.example.Cinema_backend.service.OrdersService;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,6 +205,20 @@ public class OrdersController {
         }
     }
 
-
-
+    @PostMapping("generateTxt/{id}")
+    public ModelAndView generateTxtFile(@PathVariable Long id)
+    {
+        try {
+            OrdersDTO ordersDTO = ordersService.findOrderById(id);
+            FileGenerator txtGen = new TextFileGenerator(ordersDTO);
+            txtGen.generateFile();
+            log.info("Text file succesfully generated.");
+            return new ModelAndView("redirect:/FileGenerated");
+        }
+        catch (Exception e)
+        {
+            log.info("Text file not generated: " + e.getMessage());
+            return new ModelAndView("redirect:/LoginClient");
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.Cinema_backend.dto;
 
+import com.example.Cinema_backend.entity.FinalOrders;
 import com.example.Cinema_backend.entity.Orders;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,5 +26,6 @@ import java.util.UUID;
         private String nrTelefon;
         private Boolean isAdmin;
         private List<Orders> orders;
+        private List<FinalOrders> finalOrders;
 
 }

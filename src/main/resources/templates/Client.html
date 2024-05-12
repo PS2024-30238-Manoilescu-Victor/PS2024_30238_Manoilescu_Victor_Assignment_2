@@ -125,6 +125,10 @@
         <input type="submit" class="buttons_top" value="See movies" onclick="return confirm('This will redirect you to the ticket list. Proceed?');"><br>
     </form>
 
+    <form th:action="@{/person/FinaliseOrder/{path}(path=${client.id})}" method="post">
+        <input type="submit" class="buttons_top" value="Finalise Order" onclick="return confirm('Are you sure you want to finalise your order?');"><br>
+    </form>
+
 </div>
 
 <div class="center">
@@ -135,6 +139,7 @@
             <th class="tableFormat">Date</th>
            <th class="tableFormat">Tickets</th>
             <th class="tableFormat">Delete</th>
+            <th class="tableFormat">Generate txt file</th>
         </tr>
         <tr th:each="order : ${client.orders}">
 
@@ -156,6 +161,12 @@
             <td class="tableFormat">
                 <form th:action="@{/orders/clientDeleteOrder/{path}(path=${order.getIdOrd})}" method="post">
                     <input type="submit" class="buttons_top" value="Delete order" onclick="return confirm('Are you sure you want to delete this order?');"><br>
+                </form>
+            </td>
+
+            <td class="tableFormat">
+                <form th:action="@{/orders/generateTxt/{path}(path=${order.getIdOrd})}" method="post">
+                    <input type="submit" class="buttons_top" value="Generate txt" onclick="return confirm('Are you sure you want to download the txt file for this order?');"><br>
                 </form>
             </td>
         </tr>

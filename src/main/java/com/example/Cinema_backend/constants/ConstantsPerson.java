@@ -10,4 +10,6 @@ public class ConstantsPerson {
     public static String wrongSurname(){return "Surname contains invalid characters.";}
     public static String nonexistentPerson(Long id){return "The person with id \"" + id + "\" doesn't exist!";}
 
+    public static String nonexistentCart(){return "There is no existing cart";}
+
 }

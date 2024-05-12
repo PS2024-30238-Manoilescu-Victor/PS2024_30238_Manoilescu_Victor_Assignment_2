@@ -73,4 +73,22 @@ public class MainController {
         return new ModelAndView("SaleOper");
     }
 
+    @GetMapping("/CartCreated")
+    public ModelAndView CartCreated()
+    {
+        return new ModelAndView("CartCreated");
+    }
+
+    @GetMapping("/FinalisedOrder")
+    public ModelAndView FinalisedOrder()
+    {
+        return new ModelAndView("FinalisedOrder");
+    }
+
+    @GetMapping("/FileGenerated")
+    public ModelAndView FileGenerated()
+    {
+        return new ModelAndView("FileGenerated");
+    }
+
 }

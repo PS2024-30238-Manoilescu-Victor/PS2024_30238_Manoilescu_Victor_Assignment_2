@@ -1,12 +1,16 @@
 package com.example.Cinema_backend.service;
 
 
+import com.example.Cinema_backend.constants.ConstantsTicket;
 import com.example.Cinema_backend.dto.OrdersDTO;
+import com.example.Cinema_backend.dto.TicketDTO;
 import com.example.Cinema_backend.entity.Orders;
 import com.example.Cinema_backend.entity.Ticket;
 import com.example.Cinema_backend.mapper.OrdersMapper;
+import com.example.Cinema_backend.mapper.TicketMapper;
 import com.example.Cinema_backend.repository.OrdersRepositry;
 import com.example.Cinema_backend.repository.TicketRepository;
+import com.example.Cinema_backend.validations.TicketValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -258,4 +262,45 @@ public class OrdersService {
 
         }
     }
+
+
+    public Long insert(TicketDTO ticketDTO) throws Exception{
+        Ticket ticket = TicketMapper.toTicket(ticketDTO);
+        if (TicketValidations.nonNegative(ticket.getNrTickets())) {
+            if(TicketValidations.nonNegative(ticket.getPret())) {
+                if (TicketValidations.validareData(ticket.getData())) {
+                    if(TicketValidations.validareOra(ticket.getOra())) {
+                        if(TicketValidations.validareRating(ticket.getRating())) {
+
+                            ticket = ticketRepository.saveAndFlush(ticket);
+                            return ticket.getIdTick();
+                        }
+                        else
+                        {
+                            throw new Exception(ConstantsTicket.wrongRating());
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception(ConstantsTicket.wrongOra());
+                    }
+                }
+                else
+                {
+                    throw new Exception(ConstantsTicket.wrongData());
+                }
+            }
+            else
+            {
+                throw new Exception(ConstantsTicket.negPrice());
+            }
+
+        }
+        else
+        {
+            throw new Exception(ConstantsTicket.negNrTickets());
+        }
+    }
+
 }
+

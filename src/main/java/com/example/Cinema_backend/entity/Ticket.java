@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -39,6 +40,10 @@ public class Ticket {
     @ManyToMany(mappedBy = "tickets", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Orders> orders;
+
+    @ManyToMany(mappedBy = "tickets", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<FinalOrders> finalOrders;
 
 
 }

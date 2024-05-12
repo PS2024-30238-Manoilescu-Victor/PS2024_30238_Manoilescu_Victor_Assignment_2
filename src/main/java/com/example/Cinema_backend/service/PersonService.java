@@ -2,11 +2,17 @@ package com.example.Cinema_backend.service;
 
 import com.example.Cinema_backend.constants.ConstantsPerson;
 import com.example.Cinema_backend.constants.ConstantsTicket;
+import com.example.Cinema_backend.dto.FinalOrdersDTO;
 import com.example.Cinema_backend.dto.OrdersDTO;
 import com.example.Cinema_backend.dto.PersonDTO;
+import com.example.Cinema_backend.entity.FinalOrders;
+import com.example.Cinema_backend.entity.Orders;
 import com.example.Cinema_backend.entity.Person;
 import com.example.Cinema_backend.entity.Ticket;
+import com.example.Cinema_backend.mapper.FinalOrdersMapper;
+import com.example.Cinema_backend.mapper.OrdersMapper;
 import com.example.Cinema_backend.mapper.PersonMapper;
+import com.example.Cinema_backend.repository.FinalOrdersRepository;
 import com.example.Cinema_backend.repository.PersonRepository;
 import com.example.Cinema_backend.repository.TicketRepository;
 import com.example.Cinema_backend.validations.PersonValidations;
@@ -28,6 +34,9 @@ public class PersonService {
 
     @Autowired
     PersonRepository personRepository;
+
+    @Autowired
+    FinalOrdersRepository finalOrdersRepository;
 
     @Autowired
     TicketRepository ticketRepository;
@@ -231,6 +240,30 @@ public class PersonService {
             throw new Exception(ConstantsPerson.nonexistentPerson(idPerson));
         }
 
+    }
+
+    public UUID finaliseOrder(Long idPerson) throws Exception
+    {
+        Optional<Person> personOptional = personRepository.findPersonByIdPer(idPerson);
+        if(!personOptional.isPresent()) {
+            throw new Exception(ConstantsPerson.nonexistentPerson(idPerson));
+        }
+        Person person = personOptional.get();
+        Orders orders = new Orders();
+
+        if(person.getOrders().size() == 0)
+        {
+            throw new Exception(ConstantsPerson.nonexistentCart());
+        }
+
+        for (Orders o : person.getOrders())
+        {
+            orders = o;
+        }
+        FinalOrdersDTO finalOrdersDTO = FinalOrdersMapper.toFinalOrderDTO(orders);
+        FinalOrders finalOrders = FinalOrdersMapper.toFinalOrder(finalOrdersDTO);
+        finalOrders = finalOrdersRepository.saveAndFlush(finalOrders);
+        return finalOrders.getUuid();
     }
 
     /*public Long addOrder2(Long personId,List<Long> ticketIds) throws Exception {

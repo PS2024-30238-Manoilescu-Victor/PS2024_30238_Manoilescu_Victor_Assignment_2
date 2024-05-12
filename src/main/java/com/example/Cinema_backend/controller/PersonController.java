@@ -228,11 +228,11 @@ public class PersonController {
     {
         try {
             UUID orderID = personService.createOrder(idPerson, idTicket, nr);
-            log.info("User with id \"" + idPerson + "\" created the order with uuid " + orderID);
-            return new ModelAndView("redirect:/LoginClient");
+            log.info("User with id \"" + idPerson + "\" created a new cart with uuid " + orderID);
+            return new ModelAndView("redirect:/CartCreated");
         }
         catch (Exception e) {
-            log.info("User with id \"" + idPerson + "\" didn't create an order " + e.getMessage());
+            log.info("User with id \"" + idPerson + "\" didn't create a new cart " + e.getMessage());
             return new ModelAndView("redirect:/LoginClient");
         }
     }
@@ -287,7 +287,19 @@ public class PersonController {
         }
     }
 
-
+    @PostMapping("/FinaliseOrder/{id}")
+    public ModelAndView finaliseOrder(@PathVariable Long id)
+    {
+        try {
+            UUID orderUUID = personService.finaliseOrder(id);
+            log.info("User with id \"" + id + "\" finalised an order with UUID" + orderUUID);
+            return new ModelAndView("redirect:/FinalisedOrder");
+        }
+        catch (Exception e){
+            log.info("User with id \"" + id + "\" did not finalise an order:" + e.getMessage());
+            return new ModelAndView("redirect:/LoginClient");
+        }
+    }
 
 
 }
