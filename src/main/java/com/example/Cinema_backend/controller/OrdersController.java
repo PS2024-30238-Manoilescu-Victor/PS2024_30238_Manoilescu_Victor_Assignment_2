@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.Cinema_backend.dto.OrdersDTO;
 import com.example.Cinema_backend.fileGenerators.FileGenerator;
+import com.example.Cinema_backend.fileGenerators.PdfFileGenerator;
 import com.example.Cinema_backend.fileGenerators.TextFileGenerator;
 import com.example.Cinema_backend.service.OrdersService;
 import org.slf4j.*;
@@ -218,6 +219,23 @@ public class OrdersController {
         catch (Exception e)
         {
             log.info("Text file not generated: " + e.getMessage());
+            return new ModelAndView("redirect:/LoginClient");
+        }
+    }
+
+    @PostMapping("generatePdf/{id}")
+    public ModelAndView generatePdfFile(@PathVariable Long id)
+    {
+        try {
+            OrdersDTO ordersDTO = ordersService.findOrderById(id);
+            FileGenerator pdfGen = new PdfFileGenerator(ordersDTO);
+            pdfGen.generateFile();
+            log.info("Pdf file succesfully generated.");
+            return new ModelAndView("redirect:/FileGenerated");
+        }
+        catch (Exception e)
+        {
+            log.info("Pdf file not generated: " + e.getMessage());
             return new ModelAndView("redirect:/LoginClient");
         }
     }
