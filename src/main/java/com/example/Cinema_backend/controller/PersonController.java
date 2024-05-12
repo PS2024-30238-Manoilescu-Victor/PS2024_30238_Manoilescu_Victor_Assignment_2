@@ -2,6 +2,7 @@ package com.example.Cinema_backend.controller;
 
 import com.example.Cinema_backend.constants.ConstantsEmailSender;
 import com.example.Cinema_backend.dto.AccountCreationDTO;
+import com.example.Cinema_backend.dto.AccountDeletionDTO;
 import com.example.Cinema_backend.dto.PersonDTO;
 import com.example.Cinema_backend.dto.PersonDTO2;
 import com.example.Cinema_backend.mapper.PersonMapper;
@@ -263,8 +264,13 @@ public class PersonController {
     public ModelAndView deleteClient(@PathVariable Long id)
     {
         try {
-            Long personID = personService.delete(id);
-            log.info("User with id \"" + personID + "\" was deleted!");
+
+            PersonDTO personAux = personService.delete(id);
+            log.info("User with id \"" + personAux.getUuid() + "\" was deleted!");
+
+            AccountDeletionDTO accountDeletionDTO = new AccountDeletionDTO(personAux.getUuid(),personAux.getNume(),personAux.getPrenume(),personAux.getEmail());
+            rabbitMQSender.sendAccountDeletion(accountDeletionDTO);
+
             return new ModelAndView("redirect:/LoginClient");
         }
         catch (Exception e) {
@@ -277,8 +283,8 @@ public class PersonController {
     public ModelAndView deleteUser(@PathVariable Long id)
     {
         try {
-            Long personID = personService.delete(id);
-            log.info("User with id \"" + personID + "\" was deleted!");
+            PersonDTO personAux = personService.delete(id);
+            log.info("User with uuid \"" + personAux.getUuid() + "\" was deleted!");
             return new ModelAndView("redirect:/UserOper");
         }
         catch (Exception e) {

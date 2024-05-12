@@ -194,12 +194,12 @@ public class PersonService {
      * @return id-ul persoanei sterse
      * @throws Exception
      */
-    public Long delete(Long id) throws Exception {
+    public PersonDTO delete(Long id) throws Exception {
         //Person person = PersonMapper.toPerson(personDTO);
         Optional<Person> personOptional = personRepository.findPersonByIdPer(id);
         if (personOptional.isPresent()) {
             personRepository.deleteById(personOptional.get().getUuid());
-            return id;
+            return PersonMapper.fromPerson(personOptional.get());
         }
         else {
             throw new Exception(ConstantsPerson.nonexistentPerson(id));

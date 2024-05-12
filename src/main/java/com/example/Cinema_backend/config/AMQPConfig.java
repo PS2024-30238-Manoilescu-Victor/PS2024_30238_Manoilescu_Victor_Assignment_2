@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import org.springframework.amqp.core.Queue;
+import org.springframework.validation.annotation.Validated;
+
 @Configuration
 public class AMQPConfig {
 
@@ -16,6 +18,12 @@ public class AMQPConfig {
     public Queue confirmAccountCreation()
     {
         return new Queue(ConstantsEmailSender.AccountConfirmQueue);
+    }
+
+    @Bean
+    public Queue confirmAccountDeletion()
+    {
+        return new Queue(ConstantsEmailSender.DeleteAccountConfirmQueue);
     }
 
     @Bean
