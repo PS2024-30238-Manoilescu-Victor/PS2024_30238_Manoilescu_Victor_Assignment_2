@@ -13,6 +13,5 @@ import java.util.UUID;
 public interface FinalOrdersRepository extends JpaRepository<FinalOrders, UUID> {
 
     Optional<FinalOrders> findFinalOrdersByIdOrd(Long id);
-    Orders findFinalOrdersByPerson(Person person);
 
 }

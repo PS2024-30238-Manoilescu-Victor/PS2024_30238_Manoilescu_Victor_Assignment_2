@@ -25,7 +25,7 @@ public class TicketController {
 
     public static final Logger log = LoggerFactory.getLogger(TicketController.class.getName());
 
-    //@Autowired
+
     TicketService ticketService;
 
 

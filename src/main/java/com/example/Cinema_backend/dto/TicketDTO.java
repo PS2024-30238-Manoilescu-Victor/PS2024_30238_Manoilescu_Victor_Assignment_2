@@ -1,10 +1,7 @@
 package com.example.Cinema_backend.dto;
 
 import com.example.Cinema_backend.entity.Orders;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.Set;
@@ -14,6 +11,7 @@ import java.util.UUID;
 @Setter //
 @AllArgsConstructor //
 @NoArgsConstructor //
+@Builder
 public class TicketDTO {
 
     private UUID uuid;

@@ -21,7 +21,7 @@ public class OrdersController {
 
     public static final Logger log = LoggerFactory.getLogger(PersonController.class.getName());
 
-    //@Autowired
+
     OrdersService ordersService;
 
 
@@ -116,8 +116,6 @@ public class OrdersController {
      * @param idTicket2 id-ul biletului ce va fi adaugat la comanda
      * @return id-ul comenzii
      */
-    //@PutMapping("addTicket/{idOrder}/{idTicket}/{nr}")
-    //@PostMapping("addTicket/{idOrder}")
     @PostMapping("addTicket")
     //public ResponseEntity<Long> addTicketToOrder(@PathVariable Long idOrder, @PathVariable Long idTicket, @PathVariable int nr)
     public ModelAndView addTicketToOrder(@Validated Long idOrder, @Validated Long idTicket2, @Validated int nr2)
@@ -134,7 +132,6 @@ public class OrdersController {
     }
 
     @PostMapping("addTicketAdmin")
-    //public ResponseEntity<Long> addTicketToOrder(@PathVariable Long idOrder, @PathVariable Long idTicket, @PathVariable int nr)
     public ModelAndView addTicketToOrder2(@Validated Long idOrder, @Validated Long idTicket2, @Validated int nr2)
     {
         try {
@@ -148,9 +145,6 @@ public class OrdersController {
         }
     }
 
-
-    //@PutMapping("removeTicket/{idOrder}/{idTicket}/{nr}")
-    //@PostMapping("removeTicket/{idOrder2}")
     @PostMapping("removeTicket")
     //public ResponseEntity<Long> removeTicketFromOrder(@PathVariable Long idOrder, @PathVariable Long idTicket, @PathVariable int nr)
     public ModelAndView removeTicketFromOrder(@Validated Long idOrder, @Validated Long idTicket2, @Validated int nr2)

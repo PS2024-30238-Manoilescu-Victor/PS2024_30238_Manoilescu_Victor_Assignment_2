@@ -8,7 +8,21 @@ public class PersonMapper {
 
     public static Person toPerson(PersonDTO personDTO)
     {
-        Person aux = new Person();
+
+        return Person.builder()
+                .uuid(personDTO.getUuid())
+                .idPer(personDTO.getId())
+                .email(personDTO.getEmail())
+                .nume(personDTO.getNume())
+                .prenume(personDTO.getPrenume())
+                .parola(personDTO.getParola())
+                .nrTelefon(personDTO.getNrTelefon())
+                .isAdmin(personDTO.getIsAdmin())
+                .orders(personDTO.getOrders())
+                .finalOrders(personDTO.getFinalOrders())
+                .build();
+
+        /*Person aux = new Person();
         aux.setUuid(personDTO.getUuid());
         aux.setIdPer(personDTO.getId());
         aux.setEmail(personDTO.getEmail());
@@ -19,26 +33,39 @@ public class PersonMapper {
         aux.setIsAdmin(personDTO.getIsAdmin());
         aux.setOrders(personDTO.getOrders());
         aux.setFinalOrders(personDTO.getFinalOrders());
-        return aux;
+        return aux;*/
     }
 
     public static PersonDTO toPersonDTO(PersonDTO2 personDTO2)
     {
-        PersonDTO aux = new PersonDTO();
-        aux.setUuid(personDTO2.getUuid());
-        aux.setId(personDTO2.getId());
-        aux.setEmail(personDTO2.getEmail1());
-        aux.setNume(personDTO2.getNume1());
-        aux.setPrenume(personDTO2.getPrenume1());
-        aux.setParola(personDTO2.getParola1());
-        aux.setNrTelefon(personDTO2.getNrTelefon1());
-        aux.setIsAdmin(personDTO2.getIsAdmin1());
-        return aux;
+        return PersonDTO.builder()
+                .uuid(personDTO2.getUuid())
+                .id(personDTO2.getId())
+                .email(personDTO2.getEmail1())
+                .nume(personDTO2.getNume1())
+                .prenume(personDTO2.getPrenume1())
+                .parola(personDTO2.getParola1())
+                .nrTelefon(personDTO2.getNrTelefon1())
+                .isAdmin(personDTO2.getIsAdmin1())
+                .build();
     }
 
     public static PersonDTO fromPerson(Person person)
     {
-        PersonDTO aux = new PersonDTO();
+        return PersonDTO.builder()
+                .uuid(person.getUuid())
+                .id(person.getIdPer())
+                .email(person.getEmail())
+                .nume(person.getNume())
+                .prenume(person.getPrenume())
+                .parola(person.getParola())
+                .nrTelefon(person.getNrTelefon())
+                .isAdmin(person.getIsAdmin())
+                .orders(person.getOrders())
+                .finalOrders(person.getFinalOrders())
+                .build();
+
+        /*PersonDTO aux = new PersonDTO();
         aux.setUuid(person.getUuid());
         aux.setId(person.getIdPer());
         aux.setEmail(person.getEmail());
@@ -49,7 +76,7 @@ public class PersonMapper {
         aux.setIsAdmin(person.getIsAdmin());
         aux.setOrders(person.getOrders());
         aux.setFinalOrders(person.getFinalOrders());
-        return aux;
+        return aux;*/
     }
 
 }

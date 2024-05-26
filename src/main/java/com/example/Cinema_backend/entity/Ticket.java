@@ -38,7 +38,7 @@ public class Ticket {
     private String ora;
     @Column
     private Integer nrTickets;
-    @Column
+    @Column(columnDefinition = "../../assets/DefaultImage.jpg")
     private String imagePath = "../../assets/DefaultImage.jpg";
 
     @ManyToMany(mappedBy = "tickets", cascade = CascadeType.REMOVE)

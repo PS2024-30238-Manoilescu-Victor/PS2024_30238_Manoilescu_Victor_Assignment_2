@@ -12,11 +12,11 @@ import java.util.UUID;
 @Repository
 public interface PersonRepository extends JpaRepository<Person,UUID>{ //CrudRepository<Person,Long> {
 
-    Person findPersonByNumeAndPrenume(String nume, String prenume);
+
     Optional<Person> findPersonByIdPer(Long id);
-    List<Person> findByNume(String nume);
+
 
     Optional<Person> findByEmailAndParola(String email, String parola);
-    //Person getPersonByNumeAndPrenume(String nume, String prenume);
+
 
 }

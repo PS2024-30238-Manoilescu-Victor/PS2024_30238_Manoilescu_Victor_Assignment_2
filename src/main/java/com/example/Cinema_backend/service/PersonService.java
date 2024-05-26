@@ -279,25 +279,5 @@ public class PersonService {
         return FinalOrdersMapper.fromFinalOrder(finalOrders);
     }
 
-    /*public Long addOrder2(Long personId,List<Long> ticketIds) throws Exception {
-            Date currentDate = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String currentDateTime = dateFormat.format(currentDate);
-            Optional<Person> personOptional = personRepository.findPersonById(personId);
-            if (personOptional.isPresent()) {
-                Person person = personOptional.get();
-                List<Orders> orders = person.getOrders();
-                for (Long id : ticketIds) {
-
-                    Orders aux = new Orders();
-
-                }
-                return personId;
-            } else {
-                throw new Exception("The person with id \"" + personId + "\" doesn't exist!");
-            }
-
-        }*/
-
 
 }

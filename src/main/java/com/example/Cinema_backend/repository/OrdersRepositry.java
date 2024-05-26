@@ -12,6 +12,5 @@ import java.util.UUID;
 public interface OrdersRepositry extends JpaRepository<Orders, UUID> {
 
     Optional<Orders> findOrdersByIdOrd(Long id);
-    Orders findOrderByPerson(Person person);
 
 }

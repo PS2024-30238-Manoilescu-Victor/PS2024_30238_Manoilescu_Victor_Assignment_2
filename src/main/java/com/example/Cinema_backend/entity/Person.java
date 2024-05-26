@@ -22,7 +22,7 @@ public class Person {
     @Column
     private UUID uuid;
 
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(insertable = false/*, updatable = false*/, columnDefinition="serial")
     private Long idPer;
     @Column

@@ -166,10 +166,7 @@ public class OrdersService {
         if (orderOptional.isPresent()) {
 
             FinalOrders orders = orderOptional.get();
-            /*for(Ticket t : orders.getTickets())
-            {
-                ticketService.incrementNr(t.getIdTick());
-            }*/
+
             finalOrdersRepository.deleteById(orderOptional.get().getUuid());
             return id;
         }
@@ -224,9 +221,7 @@ public class OrdersService {
             Optional<Ticket> ticketOptional = ticketRepository.findTicketByIdTick(idTicket);
             if (ticketOptional.isPresent()) {
                 Ticket ticket = ticketOptional.get();
-                /*List<Ticket> aux = orders.getTickets();
-                aux.add(ticket);
-                orders.setTickets(aux);*/
+
                 for (int i = 0; i < nr; i++) {
                     orders.getTickets().add(ticket);
                     ticketService.decrementNr(idTicket);
@@ -244,7 +239,7 @@ public class OrdersService {
             throw new Exception("The order with id \"" + idOrder + "\" doesn't exist!");
 
         }
-        //return idOrder;
+
     }
 
     public Long removeTicket(Long idOrder, Long idTicket, int nr) throws Exception
@@ -256,22 +251,6 @@ public class OrdersService {
             if (ticketOptional.isPresent()) {
                 Ticket ticket = ticketOptional.get();
                 List<Ticket> aux = orders.getTickets();
-
-                /*int contor = 0;
-                int ok = nr;
-                for(Ticket t : aux)
-                {
-                    if(t.getId() == idTicket)
-                    {
-                        aux.remove(contor);
-                        ticketService.incrementNr(idTicket);
-                        contor--;
-                        ok--;
-                        if(ok == 0)
-                            break;
-                    }
-                    contor++;
-                }*/
 
                 for (int i=0; i< nr; i++) {
                     aux.remove(ticket);

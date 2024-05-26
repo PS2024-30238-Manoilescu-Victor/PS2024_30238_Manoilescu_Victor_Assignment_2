@@ -35,7 +35,7 @@ public class PersonController {
 
     public static final Logger log = LoggerFactory.getLogger(PersonController.class.getName());
 
-    //@Autowired
+
     PersonService personService;
 
 

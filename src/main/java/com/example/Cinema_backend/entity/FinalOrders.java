@@ -22,7 +22,7 @@ public class FinalOrders {
     @Column
     private UUID uuid;
 
-    //@Generated(strategy = EventType.INSERT)
+
     @Column(insertable = false/*, updatable = false*/, columnDefinition="serial")
     private Long idOrd;
 

@@ -7,18 +7,28 @@ public class SalesMapper {
 
     public static Sales toSales(SalesDTO salesDTO)
     {
-        Sales aux = new Sales();
+        return Sales.builder()
+                .ticketId(salesDTO.getTicketId())
+                .percentReduced(salesDTO.getPercentReduced())
+                .build();
+
+        /*Sales aux = new Sales();
         aux.setTicketId(salesDTO.getTicketId());
         aux.setPercentReduced(salesDTO.getPercentReduced());
-        return aux;
+        return aux;*/
     }
 
     public static SalesDTO fromSales(Sales sales)
     {
-        SalesDTO aux = new SalesDTO();
+        return SalesDTO.builder()
+                .ticketId(sales.getTicketId())
+                .percentReduced(sales.getPercentReduced())
+                .build();
+
+       /* SalesDTO aux = new SalesDTO();
         aux.setTicketId(sales.getTicketId());
         aux.setPercentReduced(sales.getPercentReduced());
-        return aux;
+        return aux;*/
     }
 
 }
