@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,7 +92,7 @@ public class TicketService {
      * @param ticketDTO biletul ce va fi inserat
      * @return id-ul noului bilet inserat
      */
-    public Long insert(TicketDTO ticketDTO) throws Exception{
+    public UUID insert(TicketDTO ticketDTO) throws Exception{
         Ticket ticket = TicketMapper.toTicket(ticketDTO);
         if (TicketValidations.nonNegative(ticket.getNrTickets())) {
             if(TicketValidations.nonNegative(ticket.getPret())) {
@@ -100,7 +101,7 @@ public class TicketService {
                         if(TicketValidations.validareRating(ticket.getRating())) {
 
                             ticket = ticketRepository.saveAndFlush(ticket);
-                            return ticket.getIdTick();
+                            return ticket.getUuid();
                         }
                         else
                         {

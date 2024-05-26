@@ -125,7 +125,7 @@ public class OrdersController {
         try {
             Long orderID = ordersService.addTicket(idOrder, idTicket2, nr2);
             log.info("Ticket with id \"" + idTicket2 + "\" was added to order " + orderID + ".");
-            return new ModelAndView("redirect:/LoginClient");
+            return new ModelAndView("redirect:/OrderUpdated");
         }
         catch (Exception e) {
             log.info("Ticket with id \"" + idTicket2 + "\" was not added to order " + idOrder + ". " + e.getMessage());
@@ -158,7 +158,7 @@ public class OrdersController {
         try {
             Long orderID = ordersService.removeTicket(idOrder, idTicket2, nr2);
             log.info("Ticket with id \"" + idTicket2 + "\" was removed from the order " + orderID + ".");
-            return new ModelAndView("redirect:/LoginClient");
+            return new ModelAndView("redirect:/OrderUpdated");
         }
         catch (Exception e) {
             log.info("Ticket with id \"" + idTicket2 + "\" was not removed from order " + idOrder + ". " + e.getMessage());

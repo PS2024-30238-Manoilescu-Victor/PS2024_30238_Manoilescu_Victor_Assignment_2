@@ -1,6 +1,7 @@
 package com.example.Cinema_backend.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.example.Cinema_backend.dto.SalesDTO;
 import com.example.Cinema_backend.dto.TicketDTO;
@@ -102,8 +103,8 @@ public class TicketController {
     @PostMapping(path = "/createTicket", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = { MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ModelAndView insertTicket(@Validated TicketDTO ticketDTO) {
         try {
-            Long ticketID = ticketService.insert(ticketDTO);
-            log.info("Ticket with id \"" + ticketID + "\" was inserted!");
+            UUID ticketUUID = ticketService.insert(ticketDTO);
+            log.info("Ticket with uuid \"" + ticketUUID + "\" was inserted!");
             return new ModelAndView("redirect:/TicketOper");
         }
         catch (Exception e) {

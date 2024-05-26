@@ -248,11 +248,11 @@ public class PersonController {
     {
         try {
             UUID orderID = personService.createOrder(idPerson, idTicket, nr);
-            log.info("Admin with id \"" + idPerson + "\" created the order with uuid " + orderID);
+            log.info("Admin created an order for user with id \"" + idPerson + "\" created the order with uuid " + orderID);
             return new ModelAndView("redirect:/OrderOper");
         }
         catch (Exception e) {
-            log.info("Admin with id \"" + idPerson + "\" didn't create an order " + e.getMessage());
+            log.info("Admin \"" + idPerson + "\" didn't create an order " + e.getMessage());
             return new ModelAndView("redirect:/OrderOper");
         }
     }
