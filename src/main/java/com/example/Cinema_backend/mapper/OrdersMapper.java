@@ -1,5 +1,6 @@
 package com.example.Cinema_backend.mapper;
 
+import com.example.Cinema_backend.dto.FinalOrdersDTO;
 import com.example.Cinema_backend.dto.OrdersDTO;
 import com.example.Cinema_backend.entity.Orders;
 
@@ -25,6 +26,19 @@ public class OrdersMapper {
         aux.setPerson(orders.getPerson());
         aux.setTickets(orders.getTickets());
         return aux;
+    }
+
+    public static OrdersDTO fromFinalOrdersDTO(FinalOrdersDTO finalOrdersDTO)
+    {
+        {
+            OrdersDTO aux = new OrdersDTO();
+            aux.setUuid(finalOrdersDTO.getUuid());
+            aux.setId(finalOrdersDTO.getId());
+            aux.setDataComanda(finalOrdersDTO.getDataComanda());
+            aux.setPerson(finalOrdersDTO.getPerson());
+            aux.setTickets(finalOrdersDTO.getTickets());
+            return aux;
+        }
     }
 
 }

@@ -166,6 +166,22 @@ public class TicketController {
         }
     }
 
+    @PostMapping("/seePoster/{id}")
+    public ModelAndView seePoster(@PathVariable Long id)
+    {
+        try {
+            TicketDTO ticket = ticketService.findTicketById(id);
+            log.info("Poster for ticket with id \"" + ticket.getId() + "\" was accessed!");
+            ModelAndView modelAndView = new ModelAndView("Poster");
+            modelAndView.addObject("ticket",ticket);
+            return modelAndView;
+        }
+        catch (Exception e) {
+            log.info("Poster for ticket with id \"" + id + "\" was not accessed! " + e.getMessage());
+            return new ModelAndView("redirect:/TicketOper");
+        }
+    }
+
     @PostMapping("/deleteSale/{id}")
     public ModelAndView deleteSale(@PathVariable Long id)
     {

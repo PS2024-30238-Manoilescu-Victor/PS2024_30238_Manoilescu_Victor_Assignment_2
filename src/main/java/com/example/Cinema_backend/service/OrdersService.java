@@ -2,12 +2,16 @@ package com.example.Cinema_backend.service;
 
 
 import com.example.Cinema_backend.constants.ConstantsTicket;
+import com.example.Cinema_backend.dto.FinalOrdersDTO;
 import com.example.Cinema_backend.dto.OrdersDTO;
 import com.example.Cinema_backend.dto.TicketDTO;
+import com.example.Cinema_backend.entity.FinalOrders;
 import com.example.Cinema_backend.entity.Orders;
 import com.example.Cinema_backend.entity.Ticket;
+import com.example.Cinema_backend.mapper.FinalOrdersMapper;
 import com.example.Cinema_backend.mapper.OrdersMapper;
 import com.example.Cinema_backend.mapper.TicketMapper;
+import com.example.Cinema_backend.repository.FinalOrdersRepository;
 import com.example.Cinema_backend.repository.OrdersRepositry;
 import com.example.Cinema_backend.repository.TicketRepository;
 import com.example.Cinema_backend.validations.TicketValidations;
@@ -27,6 +31,8 @@ public class OrdersService {
     OrdersRepositry ordersRepositry;
 
     @Autowired
+    FinalOrdersRepository finalOrdersRepository;
+    @Autowired
     TicketRepository ticketRepository;
 
     @Autowired
@@ -41,6 +47,13 @@ public class OrdersService {
      * Functie care pune toate comenzile intr-o lista
      * @return Lista de comenzi
      */
+    public List<FinalOrdersDTO> findFinalisedOrders(){
+        List<FinalOrders> finalOrders = finalOrdersRepository.findAll();
+        return finalOrders.stream()
+                .map(FinalOrdersMapper::fromFinalOrder)
+                .collect(Collectors.toList());
+    }
+
     public List<OrdersDTO> findOrders(){
         List<Orders> ordersList = ordersRepositry.findAll();
         return ordersList.stream()
@@ -141,6 +154,23 @@ public class OrdersService {
                 ticketService.incrementNr(t.getIdTick());
             }
             ordersRepositry.deleteById(orderOptional.get().getUuid());
+            return id;
+        }
+        else {
+            throw new Exception("The order with id \"" + id + "\" doesn't exist!");
+        }
+    }
+
+    public Long deleteFinalised(Long id) throws Exception {
+        Optional<FinalOrders> orderOptional = finalOrdersRepository.findFinalOrdersByIdOrd(id);
+        if (orderOptional.isPresent()) {
+
+            FinalOrders orders = orderOptional.get();
+            /*for(Ticket t : orders.getTickets())
+            {
+                ticketService.incrementNr(t.getIdTick());
+            }*/
+            finalOrdersRepository.deleteById(orderOptional.get().getUuid());
             return id;
         }
         else {

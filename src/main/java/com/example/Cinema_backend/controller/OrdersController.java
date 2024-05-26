@@ -2,10 +2,9 @@ package com.example.Cinema_backend.controller;
 
 import java.util.List;
 
+import com.example.Cinema_backend.dto.FinalOrdersDTO;
 import com.example.Cinema_backend.dto.OrdersDTO;
-import com.example.Cinema_backend.fileGenerators.FileGenerator;
-import com.example.Cinema_backend.fileGenerators.PdfFileGenerator;
-import com.example.Cinema_backend.fileGenerators.TextFileGenerator;
+import com.example.Cinema_backend.fileGenerators.*;
 import com.example.Cinema_backend.service.OrdersService;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,16 @@ public class OrdersController {
         int nr = dtos.size();
         log.info(nr + " Order(s) were found.");
         ModelAndView modelAndView = new ModelAndView("SelectAllOrders");
+        modelAndView.addObject("orders",dtos);
+        return modelAndView;
+    }
+
+    @GetMapping("/selectAllFinalisedOrders")
+    public ModelAndView getFinalisedOrders() {
+        List<FinalOrdersDTO> dtos = ordersService.findFinalisedOrders();
+        int nr = dtos.size();
+        log.info(nr + " Finalised Order(s) were found.");
+        ModelAndView modelAndView = new ModelAndView("SelectAllFinalOrders");
         modelAndView.addObject("orders",dtos);
         return modelAndView;
     }
@@ -172,6 +181,8 @@ public class OrdersController {
         }
     }
 
+
+
     /**
      * Sterge o comanda cu id dat
      * @param id id-ul comenzii ce va fi sterse
@@ -206,12 +217,26 @@ public class OrdersController {
         }
     }
 
+    @PostMapping("deleteFinalisedOrder/{id}")
+    public ModelAndView deleteFinalisedOrder(@PathVariable Long id)
+    {
+        try {
+            Long orderID = ordersService.deleteFinalised(id);
+            log.info("Finalised Order with id \"" + orderID + "\" was deleted!");
+            return new ModelAndView("redirect:/OrderOper");
+        }
+        catch (Exception e) {
+            log.info("Finalised Order with id \"" + id + "\" was not deleted! " + e.getMessage());
+            return new ModelAndView("redirect:/OrderOper");
+        }
+    }
+
     @PostMapping("generateTxt/{id}")
     public ModelAndView generateTxtFile(@PathVariable Long id)
     {
         try {
             OrdersDTO ordersDTO = ordersService.findOrderById(id);
-            FileGenerator txtGen = new TextFileGenerator(ordersDTO);
+            FileGenerator txtGen = FileGeneratorFactory.createFileGenerator(FileGeneratorType.TXT, ordersDTO);
             txtGen.generateFile();
             log.info("Text file succesfully generated.");
             return new ModelAndView("redirect:/FileGenerated");
@@ -228,7 +253,7 @@ public class OrdersController {
     {
         try {
             OrdersDTO ordersDTO = ordersService.findOrderById(id);
-            FileGenerator pdfGen = new PdfFileGenerator(ordersDTO);
+            FileGenerator pdfGen = FileGeneratorFactory.createFileGenerator(FileGeneratorType.PDF, ordersDTO);
             pdfGen.generateFile();
             log.info("Pdf file succesfully generated.");
             return new ModelAndView("redirect:/FileGenerated");

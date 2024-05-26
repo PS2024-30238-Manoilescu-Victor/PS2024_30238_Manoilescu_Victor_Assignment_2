@@ -22,8 +22,13 @@
         <button class="button2" onclick="window.location.href='TicketOper';">
             Tickets
         </button>
-    </div>
 
+    </div>
+    <div>
+        <form th:action="@{/orders/selectAllFinalisedOrders}" method="get">
+            <input type="submit" value="Final orders" class="form1"><br>
+        </form>
+    </div>
     <button onclick="location.href='LoginAdmin'" class="back_button">Go Back</button>
 </div>
 

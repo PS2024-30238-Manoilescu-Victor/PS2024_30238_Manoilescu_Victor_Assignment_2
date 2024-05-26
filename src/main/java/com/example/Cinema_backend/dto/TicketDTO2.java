@@ -24,6 +24,6 @@ public class TicketDTO2 {
     private String data1;
     private String ora1;
     private Integer nrTickets1;
-
+    private String imagePath;
 
 }

@@ -125,9 +125,24 @@
         <input type="submit" class="buttons_top" value="See movies" onclick="return confirm('This will redirect you to the ticket list. Proceed?');"><br>
     </form>
 
-    <!--<form th:action="@{/person/FinaliseOrder/{path}(path=${client.id})}" method="post">
-        <input type="submit" class="buttons_top" value="Finalise Order" onclick="return confirm('Are you sure you want to finalise your order?');"><br>
-    </form>-->
+    <!-- Trigger/Open The Modal -->
+    <button id="myBtn5" class="buttons_top">Finalise order</button>
+
+    <!-- The Modal -->
+    <div id="myModal5" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close5">&times;</span>
+            <form th:action="@{/person/FinaliseOrder/{path}(path=${client.id})}" method="post" style="font-family: 'Book Antiqua'">
+                <label for="idTicket" style="margin-left: 65px">Ticket id:</label>
+                <input type="number" id="idOrder3" name="idOrder3" required><br>
+
+                <input type="submit" value="Finalise order" >
+            </form>
+        </div>
+
+    </div>
 
 </div>
 
@@ -135,7 +150,7 @@
     <table id="myTable" class="tableFormat">
         <tr>
 
-            <th class="tableFormat">Id</th>
+            <th class="tableFormat">Order Id</th>
             <th class="tableFormat">Date</th>
            <th class="tableFormat">Tickets</th>
             <th class="tableFormat">Delete</th>
@@ -178,6 +193,36 @@
             </td>
         </tr>
     </table>
+
+    <table id="myTable2" class="tableFormat">
+        <tr>
+
+            <th class="tableFormat">Finalised Order Id</th>
+            <th class="tableFormat">Date</th>
+            <th class="tableFormat">Tickets</th>
+
+        </tr>
+        <tr th:each="order : ${client.finalOrders}">
+
+            <td class="tableFormat" th:text="${order.getIdOrd}"></td>
+            <td class="tableFormat" th:text="${order.dataComanda}"></td>
+
+            <td class="tableFormat">
+                <table>
+                    <tr th:switch="${order.tickets.size()}">
+                        <span th:case="'0'">No tickets</span>
+                        <span th:case="'1'" th:text="${order.tickets.get(0).getNume()}"></span>
+                        <div th:case="*">
+                            <div th:each="tickets:${order.tickets}" th:text="${tickets.nume}"/>
+                        </div>
+                    </tr>
+                </table>
+            </td>
+
+        </tr>
+    </table>
+
+
 </div>
 
 <button onclick="history.back()" class="back_button">Go Back</button>
@@ -285,6 +330,32 @@
     window.onclick = function(event) {
         if (event.target == modal4) {
             modal4.style.display = "none";
+        }
+    }
+
+    // Get the modal
+    var modal5 = document.getElementById("myModal5");
+
+    // Get the button that opens the modal
+    var btn5 = document.getElementById("myBtn5");
+
+    // Get the <span> element that closes the modal
+    var span5 = document.getElementsByClassName("close5")[0];
+
+    // When the user clicks on the button, open the modal
+    btn5.onclick = function() {
+        modal5.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span5.onclick = function() {
+        modal5.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal5) {
+            modal5.style.display = "none";
         }
     }
 

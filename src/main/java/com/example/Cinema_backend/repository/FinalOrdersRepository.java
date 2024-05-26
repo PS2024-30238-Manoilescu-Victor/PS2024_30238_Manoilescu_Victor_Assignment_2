@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface FinalOrdersRepository extends JpaRepository<FinalOrders, UUID> {
 
-    Optional<Orders> findFinalOrdersByIdOrd(Long id);
+    Optional<FinalOrders> findFinalOrdersByIdOrd(Long id);
     Orders findFinalOrdersByPerson(Person person);
 
 }

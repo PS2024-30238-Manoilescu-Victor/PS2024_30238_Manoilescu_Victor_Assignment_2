@@ -18,6 +18,7 @@ public class TicketMapper {
         aux.setOra(ticketDTO.getOra());
         aux.setNrTickets(ticketDTO.getNrTickets());
         aux.setOrders(ticketDTO.getOrders());
+        aux.setImagePath(ticketDTO.getImagePath());
         return aux;
     }
 
@@ -33,6 +34,7 @@ public class TicketMapper {
         aux.setOra(ticket.getOra());
         aux.setNrTickets(ticket.getNrTickets());
         aux.setOrders(ticket.getOrders());
+        aux.setImagePath(ticket.getImagePath());
         return aux;
     }
 
@@ -47,6 +49,7 @@ public class TicketMapper {
         aux.setData(ticketDTO2.getData1());
         aux.setOra(ticketDTO2.getOra1());
         aux.setNrTickets(ticketDTO2.getNrTickets1());
+        aux.setImagePath(ticketDTO2.getImagePath());
         return aux;
     }
 

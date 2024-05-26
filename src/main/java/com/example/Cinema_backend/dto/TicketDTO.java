@@ -25,6 +25,7 @@ public class TicketDTO {
     private String ora;
     private Integer nrTickets;
     private List<Orders> orders;
+    private String imagePath;
 
 
 }

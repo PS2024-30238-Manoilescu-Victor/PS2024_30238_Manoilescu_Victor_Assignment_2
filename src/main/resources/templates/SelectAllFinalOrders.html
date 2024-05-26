@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet" id="bootstrap-css">
+<head>
+    <meta charset="UTF-8">
+    <title>Final Orders</title>
+    <link rel="stylesheet" th:href="@{/css/SelectAllOrders.css}">
+</head>
+<body>
+<div class="center">
+    <table id="myTable" class="tableFormat">
+        <tr>
+
+            <th class="tableFormat">Id</th>
+            <th class="tableFormat">PersonId</th>
+            <th class="tableFormat">Date</th>
+            <th class="tableFormat">Tickets</th>
+            <th class="tableFormat">Delete</th>
+        </tr>
+        <tr th:each="order : ${orders}">
+
+            <td class="tableFormat" th:text="${order.id}"></td>
+            <td class="tableFormat" th:text="${order.person.getIdPer != null} ? ${order.person.getIdPer} : 'no user id'"></td>
+            <td class="tableFormat" th:text="${order.dataComanda}"></td>
+
+            <td class="tableFormat">
+                <table>
+                    <tr th:switch="${order.tickets.size()}">
+                        <span th:case="'0'">No tickets</span>
+                        <span th:case="'1'" th:text="${order.tickets.get(0).getNume()}"></span>
+                        <div th:case="*">
+                            <div th:each="tickets:${order.tickets}" th:text="${tickets.nume}"/>
+                        </div>
+                    </tr>
+                </table>
+            </td>
+
+            <td class="tableFormat">
+                <form th:action="@{/orders/deleteFinalisedOrder/{path}(path=${order.id})}" method="post">
+                    <input type="submit" class="buttons_top" value="Delete order" onclick="return confirm('Are you sure you want to delete this order?');"><br>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<button onclick="history.back()" class="back_button">Go Back</button>
+</body>
+</html>

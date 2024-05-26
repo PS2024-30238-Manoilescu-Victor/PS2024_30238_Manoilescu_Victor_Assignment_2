@@ -3,6 +3,7 @@ package com.example.Cinema_backend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,9 @@ public class Ticket {
     private String ora;
     @Column
     private Integer nrTickets;
+    @Column
+    private String imagePath = "../../assets/DefaultImage.jpg";
+
     @ManyToMany(mappedBy = "tickets", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Orders> orders;

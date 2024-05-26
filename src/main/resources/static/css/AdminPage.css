@@ -12,7 +12,17 @@
 
 .button1{
     /*margin-top: 280px; */
-    margin-right: 280px;
+    margin-right: 160px;
+    background-color: #404040;
+    color: #bb7a2a;
+    border-color: #404040;
+    width: 140px;
+    height: 50px;
+}
+
+.form1{
+    /*margin-top: 300px;*/
+    margin-left: 1600px;
     background-color: #404040;
     color: #bb7a2a;
     border-color: #404040;
@@ -32,7 +42,7 @@
 
 .button3{
     /*margin-top: 280px; */
-    margin-right: 280px;
+    margin-right: 160px;
     background-color: #404040;
     color: #bb7a2a;
     border-color: #404040;
@@ -42,7 +52,7 @@
 
 .button4{
     /*margin-top: 280px; */
-    margin-right: 280px;
+    margin-right: 160px;
     background-color: #404040;
     color: #bb7a2a;
     border-color: #404040;

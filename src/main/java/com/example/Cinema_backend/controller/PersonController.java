@@ -1,10 +1,14 @@
 package com.example.Cinema_backend.controller;
 
 import com.example.Cinema_backend.constants.ConstantsEmailSender;
-import com.example.Cinema_backend.dto.AccountCreationDTO;
-import com.example.Cinema_backend.dto.AccountDeletionDTO;
-import com.example.Cinema_backend.dto.PersonDTO;
-import com.example.Cinema_backend.dto.PersonDTO2;
+import com.example.Cinema_backend.dto.*;
+import com.example.Cinema_backend.entity.FinalOrders;
+import com.example.Cinema_backend.fileGenerators.FileGenerator;
+import com.example.Cinema_backend.fileGenerators.FileGeneratorFactory;
+import com.example.Cinema_backend.fileGenerators.FileGeneratorType;
+import com.example.Cinema_backend.fileGenerators.TextFileGenerator;
+import com.example.Cinema_backend.mapper.FinalOrdersMapper;
+import com.example.Cinema_backend.mapper.OrdersMapper;
 import com.example.Cinema_backend.mapper.PersonMapper;
 import com.example.Cinema_backend.config.RabbitMQSender;
 import com.example.Cinema_backend.service.PersonService;
@@ -293,16 +297,23 @@ public class PersonController {
         }
     }
 
-    @PostMapping("/FinaliseOrder/{id}")
-    public ModelAndView finaliseOrder(@PathVariable Long id)
+    @PostMapping(path = "/FinaliseOrder/{idPerson}" , consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = { MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ModelAndView finaliseOrder(@PathVariable Long idPerson, @Validated Long idOrder3)
     {
         try {
-            UUID orderUUID = personService.finaliseOrder(id);
-            log.info("User with id \"" + id + "\" finalised an order with UUID" + orderUUID);
+            FinalOrdersDTO finalOrdersDTO = personService.finaliseOrder(idPerson, idOrder3);
+            log.info("User with id \"" + idPerson + "\" finalised an order with id" + idOrder3);
+
+            FileGenerator txtGen = FileGeneratorFactory.createFileGenerator(FileGeneratorType.TXT,OrdersMapper.fromFinalOrdersDTO(finalOrdersDTO));
+            txtGen.generateFile();
+
+            OrderFinalisationDTO orderFinalisationDTO = new OrderFinalisationDTO(finalOrdersDTO.getUuid(),finalOrdersDTO.getDataComanda(),finalOrdersDTO.getPerson().getNume(),finalOrdersDTO.getPerson().getPrenume(),finalOrdersDTO.getPerson().getEmail());
+            rabbitMQSender.sendOrderFinalisation(orderFinalisationDTO);
+
             return new ModelAndView("redirect:/FinalisedOrder");
         }
         catch (Exception e){
-            log.info("User with id \"" + id + "\" did not finalise an order:" + e.getMessage());
+            log.info("User with id \"" + idPerson + "\" did not finalise an order:" + e.getMessage());
             return new ModelAndView("redirect:/LoginClient");
         }
     }
